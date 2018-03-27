@@ -16,16 +16,18 @@
  */
 
 // You can view the full text of each annotation by running mocha test/annotations_test.js
+import i18next from 'i18next';
+const t = i18next.t.bind(i18next);
 
 var format = require('../../../data/util/format');
 
 var definitions = {
   LEAD_TEXT: {
     'stats-insufficient-data': function() {
-      return 'Why is this grey?';
+      return t('Why is this grey?');
     },
     'stats-how-calculated': function() {
-      return 'What is this?';
+      return t('What is this?');
     }
   },
   MAIN_TEXT: {
