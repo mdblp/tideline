@@ -53,7 +53,7 @@ var DailyCarbsTitle = React.createClass({
     return (
       <h3 className={headerClasses} onClick={this.handleToggleSection}>
         <div className="DailyCarbsTitle-content content">
-          <span className="DailyCarbsTitle-label label">t("Avg daily carbs")</span>
+          <span className="DailyCarbsTitle-label label"> {t('Avg daily carbs')}</span>
           <span className="DailyCarbsTitle-value value">{displayCarbs + ' g'}</span>
         </div>
         <i className={this.props.iconClass}/>

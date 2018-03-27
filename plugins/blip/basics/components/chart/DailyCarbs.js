@@ -45,7 +45,7 @@ var DailyCarbs = React.createClass({
     });
     return (
       <div className={headerClasses}>
-        <span className="DailyCarbs-label">t("Avg daily carbs")</span>
+        <span className="DailyCarbs-label">{t("Avg daily carbs")}</span>
         <span className="DailyCarbs-amount">{circleAmountLabel}</span>
         {averageDailyCarbs ? null : (<UnknownStatistic />)}
       </div>

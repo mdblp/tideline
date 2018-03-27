@@ -25,7 +25,7 @@ var UnknownStatistic = React.createClass({
     return (
       <p className="UnknownStatistic">
         <span className="UnknownStatistic-lead">{annotations.LEAD_TEXT['stats-insufficient-data']()} </span>
-        t("At least three days do not have boluses, so this statistic might not be right").
+        {t("At least three days do not have boluses, so this statistic might not be right")}.
       </p>
     );
   }
