@@ -20,6 +20,17 @@
 var _ = require('lodash');
 var React = require('react');
 
+var i18next = require('i18next');
+
+// Should be initialized in calling module
+if (i18next.options.returnEmptyString === undefined) {
+  // Return key if no translation is present
+  i18next.init({returnEmptyString: false});
+}
+
+var t = i18next.t.bind(i18next);
+
+
 var BasicContainer = require('../components/BasicContainer');
 var CalendarContainer = require('../components/CalendarContainer');
 var SummaryGroup = React.createFactory(require('../components/misc/SummaryGroup'));
@@ -40,30 +51,26 @@ var constants = require('./constants');
 var { AUTOMATED_BASAL_LABELS, SCHEDULED_BASAL_LABELS } = require('../../../../js/data/util/constants');
 var togglableState = require('../TogglableState');
 
-var basicsState = function (manufacturer) {
-  var automatedLabel = _.get(AUTOMATED_BASAL_LABELS, [manufacturer], AUTOMATED_BASAL_LABELS.default);
-  var manualLabel = _.get(SCHEDULED_BASAL_LABELS, [manufacturer], SCHEDULED_BASAL_LABELS.default);
-
-  return {
-    sections: {
-      basals: {
-        active: true,
-        chart: WrapCount,
-        column: 'right',
-        container: CalendarContainer,
-        hasHover: true,
-        id: 'basals',
-        index: 4,
-        togglable: togglableState.off,
-        selector: SummaryGroup,
-        selectorOptions: {
-          primary: { key: 'total', label: 'Basal Events' },
-          rows: [
-            [
-              { key: 'temp', label: 'Temp Basals' },
-              { key: 'suspend', label: 'Suspends' },
-              { key: 'automatedStop', label: `${automatedLabel} Exited` },
-            ],
+var basicsState = {
+  sections: {
+    basals: {
+      active: true,
+      chart: WrapCount,
+      column: 'right',
+      container: CalendarContainer,
+      hasHover: true,
+      id: 'basals',
+      index: 4,
+      togglable: togglableState.off,
+      selector: SummaryGroup,
+      selectorOptions: {
+        primary: { key: 'total', label: t('Basal Events') },
+        rows: [
+          [
+            { key: 'temp', label: t('Temp Basals') },
+            { key: 'suspend', label: t('Suspends') }
+            // commented out because there's a problem with scheduleName in OmniPod data :(
+            // { key: 'scheduleChange', label: 'Schedule Changes' }
           ]
         },
         settingsTogglable: togglableState.off,
@@ -94,7 +101,7 @@ var basicsState = function (manufacturer) {
           automated: automatedLabel,
           manual: manualLabel,
         },
-        title: `Time in ${automatedLabel} ratio`,
+        title: t(`Time in ${automatedLabel} ratio`),
         togglable: togglableState.off,
         settingsTogglable: togglableState.off,
       },
@@ -135,7 +142,7 @@ var basicsState = function (manufacturer) {
           ]
         },
         settingsTogglable: togglableState.off,
-        title: 'Bolusing',
+        title: t('Bolusing'),
         type: 'bolus'
       },
       fingersticks: {
@@ -149,12 +156,12 @@ var basicsState = function (manufacturer) {
         togglable: togglableState.off,
         selector: SummaryGroup,
         selectorOptions: {
-          primary: { path: 'smbg', key: 'total', label: 'Avg per day', average: true },
+          primary: { path: 'smbg', key: 'total', label: t('Avg per day'), average: true },
           rows: [
             [
-              { path: 'smbg', key: 'meter', label: 'Meter', percentage: true },
-              { path: 'smbg', key: 'manual', label: 'Manual', percentage: true },
-              { path: 'calibration', key: 'calibration', label: 'Calibrations' }
+              { path: 'smbg', key: 'meter', label: t('Meter'), percentage: true },
+              { path: 'smbg', key: 'manual', label: t('Manual'), percentage: true },
+              { path: 'calibration', key: 'calibration', label: t('Calibrations') }
             ],
             [
               { path: 'smbg', key: 'verylow', labelOpts: {type: 'bg', key: 'verylow'}, percentage: true },
@@ -175,15 +182,15 @@ var basicsState = function (manufacturer) {
         hoverDisplay: InfusionHoverDisplay,
         id: 'siteChanges',
         index: 3,
-        noDataMessage: 'Infusion site changes are not yet available for all pumps. Coming soon!',
+        noDataMessage: t('Infusion site changes are not yet available for all pumps. Coming soon!'),
         togglable: togglableState.off,
         selector: SiteChangeSelector,
         selectorOptions: {
-          primary: { key: constants.SITE_CHANGE_RESERVOIR, label: 'Reservoir Changes' },
+          primary: { key: constants.SITE_CHANGE_RESERVOIR, label: t('Reservoir Changes') },
           rows: [
             [
-              { key: constants.SITE_CHANGE_CANNULA, label: 'Cannula Fills' },
-              { key: constants.SITE_CHANGE_TUBING, label: 'Tube Primes' },
+              { key: constants.SITE_CHANGE_CANNULA, label: t('Cannula Fills') },
+              { key: constants.SITE_CHANGE_TUBING, label: t('Tube Primes') },
             ]
           ]
         },
