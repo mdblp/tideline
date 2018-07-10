@@ -14,6 +14,8 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  * == BSD2 LICENSE ==
  */
+import i18next from 'i18next';
+const t = i18next.t.bind(i18next);
 
 var React = require('react');
 var annotations = require('../../../../../js/plot/util/annotations/annotationdefinitions');
@@ -23,7 +25,7 @@ var UnknownStatistic = React.createClass({
     return (
       <p className="UnknownStatistic">
         <span className="UnknownStatistic-lead">{annotations.LEAD_TEXT['stats-insufficient-data']()} </span>
-        At least three days do not have boluses, so this statistic might not be right.
+        {t("At least three days do not have boluses, so this statistic might not be right")}.
       </p>
     );
   }

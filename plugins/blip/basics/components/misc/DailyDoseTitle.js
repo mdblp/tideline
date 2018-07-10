@@ -16,6 +16,8 @@
  */
 
 /* global d3 */
+import i18next from 'i18next';
+const t = i18next.t.bind(i18next);
 
 var _ = require('lodash');
 var cx = require('classnames');
@@ -54,7 +56,7 @@ var DailyDoseTitle = React.createClass({
       return (
         <h3 className="DailyDoseTitle" onClick={this.handleToggleSection}>
           <div className="DailyDoseTitle-content content">
-            <span className="DailyDoseTitle-label label">Total daily dose / kg</span>
+            <span className="DailyDoseTitle-label label">{t("Total daily dose")} / kg</span>
             <span className="DailyDoseTitle-value value">{d3.format('.2f')(dosePerKg) + ' U'}</span>
           </div>
           <i className={this.props.iconClass}/>
@@ -64,7 +66,7 @@ var DailyDoseTitle = React.createClass({
       return (
         <h3 className={headerClasses} onClick={this.handleToggleSection}>
           <div className="DailyDoseTitle-content content">
-            <span className="DailyDoseTitle-label label">Avg total daily dose</span>
+            <span className="DailyDoseTitle-label label">{t("Avg total daily dose")}</span>
             <span className="DailyDoseTitle-value value">{displayDose + ' U'}</span>
           </div>
           <i className={this.props.iconClass}/>
