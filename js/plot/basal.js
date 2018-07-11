@@ -14,7 +14,7 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  * == BSD2 LICENSE ==
  */
- 
+
 /* jshint esversion:6 */
 var i18next = require('i18next');
 var t = i18next.t.bind(i18next);
@@ -358,7 +358,7 @@ module.exports = function(pool, opts) {
           group.append('p')
             .append('span')
             .attr('class', 'secondary')
-            .html(basal.rateString(getScheduledSuppressed(datum.suppressed), 'secondary') + ' '+t('scheduled'));
+            .html(basal.rateString(getDeliverySuppressed(datum.suppressed), 'secondary') + ' '+t('scheduled'));
         }
         break;
       case 'suspend':
@@ -369,7 +369,7 @@ module.exports = function(pool, opts) {
           group.append('p')
             .append('span')
             .attr('class', 'secondary')
-            .html(basal.rateString(getScheduledSuppressed(datum.suppressed), 'secondary') + ' '+t('scheduled'));
+            .html(basal.rateString(getDeliverySuppressed(datum.suppressed), 'secondary') + ' '+t('scheduled'));
         }
         break;
       case 'automated':

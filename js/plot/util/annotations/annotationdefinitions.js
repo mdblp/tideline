@@ -109,8 +109,8 @@ var definitions = {
       return t('This basal was extended by one second because the duration and time reported by {{source}} do not match up exactly.', {source: source});
     },
     'medtronic600/basal/fabricated-from-automode-start': function(source, defs) {
-      var a = 'We are calculating the basal rate here using the Auto Mode start event from your pump history, but ';
-      var b = ' did not directly provide us with these rate changes.';
+      source = defs.sourceText(source);
+      return t('We are calculating the basal rate here using the Auto Mode start event from your pump history, but {{source}} did not directly provide us with these rate changes.');
       return defs.stitch(a, b, source);
     },
     'tandem/basal/fabricated-from-new-day': function(source, defs) {
