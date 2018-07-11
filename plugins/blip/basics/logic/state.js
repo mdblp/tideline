@@ -51,8 +51,12 @@ var constants = require('./constants');
 var { AUTOMATED_BASAL_LABELS, SCHEDULED_BASAL_LABELS } = require('../../../../js/data/util/constants');
 var togglableState = require('../TogglableState');
 
-var basicsState = {
-  sections: {
+var basicsState = function (manufacturer) {
+  var automatedLabel = _.get(AUTOMATED_BASAL_LABELS, [manufacturer], AUTOMATED_BASAL_LABELS.default);
+  var manualLabel = _.get(SCHEDULED_BASAL_LABELS, [manufacturer], SCHEDULED_BASAL_LABELS.default);
+
+  return {
+    sections: {
     basals: {
       active: true,
       chart: WrapCount,
@@ -68,10 +72,10 @@ var basicsState = {
         rows: [
           [
             { key: 'temp', label: t('Temp Basals') },
-            { key: 'suspend', label: t('Suspends') }
-            // commented out because there's a problem with scheduleName in OmniPod data :(
-            // { key: 'scheduleChange', label: 'Schedule Changes' }
-          ]
+            { key: 'suspend', label: t('Suspends') },
+            { key: 'automatedStop', label: t(`${automatedLabel} Exited`) },
+          ],
+        ]
         },
         settingsTogglable: togglableState.off,
         title: 'Basals',
