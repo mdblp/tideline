@@ -9,13 +9,16 @@ const MGDL_PER_MMOLL = 18.01559;
 module.exports = {
   AUTOMATED_BASAL_DEVICE_MODELS: {
     Medtronic: ['1580', '1581', '1582', '1780', '1781', '1782'],
+    Diabeloop: ['DBLG1'],
   },
   AUTOMATED_BASAL_LABELS: {
     Medtronic: t('Auto Mode'),
+    Diabeloop: t('Closed Loop'),
     default: t('Automated'),
   },
   SCHEDULED_BASAL_LABELS: {
     Medtronic: t('Manual'),
+    Diabeloop: t('Open Loop'),
     default: t('Manual'),
   },
   MGDL_PER_MMOLL,
