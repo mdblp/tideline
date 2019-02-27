@@ -4,6 +4,8 @@ set -ev
 npm run lint
 npm test
 
+npm run build
+
 # the node version is hardcoded here. 
 # any change of selected node version if .travis.yml 
 # will require a change here
