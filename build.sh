@@ -15,6 +15,9 @@ fi
 
 if [ -n "${TRAVIS_TAG:-}" ]; then
     echo 'Publishing on tag ${TRAVIS_TAG}'
-    npm publish
+    # pack it
+    npm pack
+    # but do not publish it as the tarball is not working
+    # npm publish
 fi
 
