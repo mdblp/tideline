@@ -57,7 +57,7 @@ describe('constants', function() {
   it('should define the SCHEDULED_BASAL_LABELS mapping', function() {
     expect(constants.SCHEDULED_BASAL_LABELS).to.eql({
       Medtronic: 'Manual',
-      Diabeloop: 'Closed Loop off',
+      Diabeloop: 'Loop mode off',
       default: 'Manual',
     });
   });
