@@ -21,14 +21,14 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var TestUtils = require('react-addons-test-utils');
-var expect = chai.expect;
-var rewire = require('rewire');
-
 var constants = require('../../../../plugins/blip/basics/logic/constants');
 
-var Selector = rewire('../../../../plugins/blip/basics/components/sitechange/Selector');
+var expect = chai.expect;
 
 describe('SiteChangeSelector', function () {
+  var rewire = require('rewire');
+  var Selector = rewire('../../../../plugins/blip/basics/components/sitechange/Selector');
+
   var basicsActions = {
     setSiteChangeEvent: sinon.stub()
   };

@@ -16,7 +16,7 @@
  */
 
 var _ = require('lodash');
-var crossfilter = require('crossfilter');
+var crossfilter = require('crossfilter2');
 
 var commonbolus = require('../plot/util/commonbolus');
 var format = require('./util/format');

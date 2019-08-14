@@ -18,7 +18,7 @@
 /* jshint esversion:6 */
 
 var _ = require('lodash');
-var crossfilter = require('crossfilter');
+var crossfilter = require('crossfilter2');
 
 var sundial = require('sundial');
 
@@ -85,7 +85,7 @@ module.exports = function(bgClasses, bgUnits = MGDL_UNITS) {
           basicsData.sections.siteChanges.hasHover = false;
         }
       }
-      else if (latestPump === constants.INSULET || latestPump === constants.DIABELOOP) {
+      else if (latestPump === constants.INSULET) {
         basicsData.data.reservoirChange.infusionSiteHistory = this.infusionSiteHistory(basicsData, constants.SITE_CHANGE_RESERVOIR);
 
         basicsData.sections.siteChanges.type = constants.SITE_CHANGE_RESERVOIR;

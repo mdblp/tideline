@@ -27,12 +27,12 @@ module.exports = {
   },
   AUTOMATED_BASAL_LABELS: {
     Medtronic: t('Auto Mode'),
-    Diabeloop: t('Loop mode'),
+    Diabeloop: t('Closed Loop'),
     default: t('Automated'),
   },
   SCHEDULED_BASAL_LABELS: {
     Medtronic: t('Manual'),
-    Diabeloop: t('Loop mode off'),
+    Diabeloop: t('Open Loop'),
     default: t('Manual'),
   },
   MGDL_PER_MMOLL,
