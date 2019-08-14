@@ -1,5 +1,5 @@
 # Yourloops data visualization for diabetes device data
-This node package is a dependency of Blip and was forked from tidepool/tideline.
+Library for Tidepool's timeline-style diabetes data visualization(s) used in Blip and was forked from tidepool/tideline.
 
 ## 1.4.0 - 2019-12-04
 ### Added
