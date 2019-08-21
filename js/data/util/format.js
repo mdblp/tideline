@@ -20,7 +20,7 @@
 var d3 = require('d3');
 var Duration = require('duration-js');
 var moment = require('moment-timezone');
-var { MGDL_UNITS } = require('./constants');
+var { MGDL_UNITS, DDDD_MMMM_D_FORMAT, HOUR_FORMAT, HOUR_MINUTE_FORMAT } = require('./constants');
 
 var format = {
 
@@ -121,7 +121,7 @@ var format = {
 
   millisecondsAsTimeOfDay: function(i) {
     var d = new Date(i);
-    return d3.time.format.utc('%-I:%M %p')(d);
+    return d3.time.format.utc(HOUR_MINUTE_FORMAT)(d);
   },
 
   timespan: function(d) {
@@ -200,7 +200,7 @@ var format = {
     if (offset) {
       d.setUTCMinutes(d.getUTCMinutes() + offset);
     }
-    return d3.time.format.utc('%-I:%M %p')(d).toLowerCase();
+    return d3.time.format.utc(HOUR_MINUTE_FORMAT)(d).toLowerCase();
   },
 
   /**
@@ -253,7 +253,7 @@ var format = {
       i = new Date(i);
       i.setUTCMinutes(i.getUTCMinutes() + offset);
     }
-    return moment(i).utc().format('dddd, MMMM D');
+    return moment(i).utc().format(DDDD_MMMM_D_FORMAT);
   },
 
   xAxisTickText: function(i, offset) {
@@ -261,7 +261,7 @@ var format = {
     if (offset) {
       d.setUTCMinutes(d.getUTCMinutes() + offset);
     }
-    return d3.time.format.utc('%-I %p')(d).toLowerCase();
+    return d3.time.format.utc(HOUR_FORMAT)(d).toLowerCase();
   }
 };
 
