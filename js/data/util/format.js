@@ -20,7 +20,10 @@
 var d3 = require('d3');
 var Duration = require('duration-js');
 var moment = require('moment-timezone');
-var { MGDL_UNITS, DDDD_MMMM_D_FORMAT, HOUR_FORMAT, HOUR_MINUTE_FORMAT } = require('./constants');
+var { MGDL_UNITS, DDDD_MMMM_D_FORMAT, HOUR_FORMAT } = require('./constants');
+
+const i18next = require('i18next');
+const t = i18next.t.bind(i18next);
 
 var format = {
 
@@ -121,7 +124,8 @@ var format = {
 
   millisecondsAsTimeOfDay: function(i) {
     var d = new Date(i);
-    return d3.time.format.utc(HOUR_MINUTE_FORMAT)(d);
+    var f = t('%-I:%M %p');
+    return d3.time.format.utc(f)(d);
   },
 
   timespan: function(d) {
@@ -184,7 +188,7 @@ var format = {
     if (offset) {
       d.setUTCMinutes(d.getUTCMinutes() + offset);
     }
-    return moment(d).utc().format('MMMM D');
+    return moment(d).utc().format(t('MMMM D'));
   },
 
   /**
@@ -197,10 +201,11 @@ var format = {
    */
   timestamp: function(timestring, offset) {
     var d = new Date(timestring);
+    var f = t('%-I:%M %p');
     if (offset) {
       d.setUTCMinutes(d.getUTCMinutes() + offset);
     }
-    return d3.time.format.utc(HOUR_MINUTE_FORMAT)(d).toLowerCase();
+    return d3.time.format.utc(f)(d).toLowerCase();
   },
 
   /**

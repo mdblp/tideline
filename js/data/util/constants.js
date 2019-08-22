@@ -13,7 +13,6 @@ const H_MM_A_FORMAT = t('h:mm a');
 const MMM_D_YYYY_H_MM_A_FORMAT = t('MMM D, YYYY h:mm a');
 const MMM_D_H_MM_A_FORMAT = t('MMM D, h:mm a');
 const HOUR_FORMAT= t('%-I %p');
-const HOUR_MINUTE_FORMAT = t('%-I:%M %p');
 const DAY_SHORT_FORMAT= t('%b %-d');
 const WEEKDAY_SHORT_FORMAT = t('%a');
 const DDD_FORMAT = t('ddd');
@@ -63,7 +62,6 @@ module.exports = {
   MMM_D_YYYY_H_MM_A_FORMAT, 
   MMM_D_H_MM_A_FORMAT,
   HOUR_FORMAT,
-  HOUR_MINUTE_FORMAT,
   DAY_SHORT_FORMAT, 
   WEEKDAY_SHORT_FORMAT,
   DDD_FORMAT,
