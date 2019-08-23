@@ -4,7 +4,7 @@ Library for Tidepool's timeline-style diabetes data visualization(s) used in Bli
 
 ## 1.1.2
 ### Fixed
-- [PT-591] Fix translations
+- [PT-588] Fix translations
 
 ## 1.1.1 - 2019-08-14
 ### Fixed
