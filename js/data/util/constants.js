@@ -6,18 +6,19 @@ const MGDL_UNITS = t('mg/dL');
 const MMOLL_UNITS = t('mmol/L');
 const MGDL_PER_MMOLL = 18.01559;
 
-const YYYY_MM_DD_FORMAT = t('YYYY-MM-DD');
 const MMMM_D_FORMAT = t('MMMM D');
 const DDDD_MMMM_D_FORMAT = t('dddd, MMMM D');
 const H_MM_A_FORMAT = t('h:mm a');
-const MMM_D_YYYY_H_MM_A_FORMAT = t('MMM D, YYYY h:mm a');
-const MMM_D_H_MM_A_FORMAT = t('MMM D, h:mm a');
 const HOUR_FORMAT= t('%-I %p');
 const DAY_SHORT_FORMAT= t('%b %-d');
 const WEEKDAY_SHORT_FORMAT = t('%a');
 const DDD_FORMAT = t('ddd');
 const MMM_FORMAT = t('MMM');
 const MMM_D_FORMAT = t('MMM D');
+// not used for now
+const YYYY_MM_DD_FORMAT = t('YYYY-MM-DD');
+const MMM_D_YYYY_H_MM_A_FORMAT = t('MMM D, YYYY h:mm a');
+const MMM_D_H_MM_A_FORMAT = t('MMM D, h:mm a');
 
 module.exports = {
   AUTOMATED_BASAL_DEVICE_MODELS: {
@@ -55,7 +56,6 @@ module.exports = {
     [MGDL_UNITS]: 600,
     [MMOLL_UNITS]: 600/MGDL_PER_MMOLL,
   },
-  YYYY_MM_DD_FORMAT,
   MMMM_D_FORMAT,
   DDDD_MMMM_D_FORMAT, 
   H_MM_A_FORMAT,

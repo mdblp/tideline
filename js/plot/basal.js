@@ -181,9 +181,7 @@ module.exports = function(pool, opts) {
             })
             .text(function(d) {
               /* jshint laxbreak: true */
-              return isAutomated
-                ? t('A_Label').charAt(0)
-                : t('M_Label').charAt(0);
+              return isAutomated ? t('A_Label').charAt(0) : t('M_Label').charAt(0);
           });
 
           markers.exit().remove();
