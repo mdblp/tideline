@@ -26,7 +26,7 @@ var chartDailyFactory = require('../../plugins/blip').oneday;
 var Header = require('./header');
 var Footer = require('./footer');
 
-var { DDDD_MMMM_D_FORMAT } = require('../../js/data/util/constants');
+var DDDD_MMMM_D_FORMAT = require('../../js/data/util/constants');
 
 var Daily = React.createClass({
   chartType: 'daily',

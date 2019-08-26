@@ -26,7 +26,7 @@ var chartWeeklyFactory = require('../../plugins/blip').twoweek;
 var Header = require('./header');
 var Footer = require('./footer');
 
-var { MMMM_D_FORMAT } = require('../../js/data/util/constants');
+var MMMM_D_FORMAT = require('../../js/data/util/constants');
 
 var tideline = {
   log: bows('Two Weeks')

@@ -32,7 +32,7 @@ var Footer = require('./footer');
 var modalPlugin = require('../../plugins/blip').modalday;
 var brush = modalPlugin.brush;
 var modalDay = modalPlugin.modalDay;
-var { MMMM_D_FORMAT } = require('../../js/data/util/constants');
+var MMMM_D_FORMAT = require('../../js/data/util/constants');
 
 var Modal = React.createClass({
   chartType: 'modal',

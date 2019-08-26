@@ -10,7 +10,7 @@ var moment = require('moment-timezone');
 
 var MS_IN_24 = 86400000;
 
-var { MMM_FORMAT, MMM_D_FORMAT } = require('../../../js/data/util/constants');
+var MMM_FORMAT, MMM_D_FORMAT = require('../../../js/data/util/constants');
 
 d3.chart('Brush', {
   initialize: function() {
