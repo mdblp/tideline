@@ -2,7 +2,7 @@
 Library for Tidepool's timeline-style diabetes data visualization(s) used in Blip and was forked from tidepool/tideline.
 
 
-## 1.1.2
+## 1.1.2 - 2019-08-26
 ### Fixed
 - [PT-588] Fix translations
 
