@@ -5,6 +5,10 @@ Library for Tidepool's timeline-style diabetes data visualization(s) used in Bli
 ### Fixed
 - [PT-704] Fix Daily View: widgets data does not match displayed data
 
+## 1.2.0 - 2019-10-11
+### Added
+- [PT-711] Display Rescucarbs with their own layout
+
 ## 1.1.2 - 2019-08-26
 ### Fixed
 - [PT-588] Fix translations
