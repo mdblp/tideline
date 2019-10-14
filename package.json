@@ -37,7 +37,7 @@
     "react-addons-pure-render-mixin": "15.6.2",
     "react-dom": "15.6.2",
     "react-sizeme": "2.5.2",
-    "sundial": "mdblp/sundial#feature/upgrade-moment-timezone"
+    "sundial": "mdblp/sundial#dblp.0.1.0"
   },
   "devDependencies": {
     "autoprefixer-loader": "3.2.0",
