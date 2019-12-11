@@ -22,18 +22,17 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var TestUtils = require('react-addons-test-utils');
 var constants = require('../../../../plugins/blip/basics/logic/constants');
+var Selector = require('../../../../plugins/blip/basics/components/sitechange/Selector');
 
 var expect = chai.expect;
 
 describe('SiteChangeSelector', function () {
-  var rewire = require('rewire');
-  var Selector = rewire('../../../../plugins/blip/basics/components/sitechange/Selector');
 
   var basicsActions = {
     setSiteChangeEvent: sinon.stub()
   };
 
-  Selector.__set__('basicsActions', basicsActions);
+  Selector.__Rewire__('basicsActions', basicsActions);
 
   beforeEach(function() {
     basicsActions.setSiteChangeEvent = sinon.stub();
@@ -57,6 +56,10 @@ describe('SiteChangeSelector', function () {
       sectionId: 'siteChanges',
       trackMetric: sinon.stub(),
     };
+  });
+
+  after(() => {
+    Selector.__ResetDependency__('basicsActions');
   });
 
   it('should be a function', function() {

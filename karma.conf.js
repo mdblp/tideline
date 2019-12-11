@@ -1,5 +1,4 @@
 
-const RewireWebpackPlugin = require("rewire-webpack-plugin");
 const webpackConf = require('./webpack.config.js');
 
 webpackConf.externals = {
@@ -18,7 +17,6 @@ webpackConf.node = {
   fs: 'empty',
   module: 'empty'
 };
-webpackConf.plugins.push(new RewireWebpackPlugin());
 
 module.exports = function karmaConfig(config) {
   config.set({
