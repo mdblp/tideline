@@ -228,6 +228,21 @@ svg {
 .d3-circle-rescuecarbs {
   fill: @rescuecarbs;
 }
+.d3-circle-physicals-low {
+  fill: @physicalactivity-low;
+}
+.d3-circle-physicals-medium {
+  fill: @physicalactivity;
+}
+.d3-circle-physicals-high {
+  fill: @physicalactivity-high;
+}
+.d3-physical-text {
+  fill: @text-light;
+  font-size: @font-size-small;
+  dominant-baseline: central;
+  text-anchor: middle;
+}
 .d3-rescuecarbs-text {
   fill: @text;
   font-size: @font-size-small;
@@ -803,6 +818,9 @@ text.d3-tabular-ui {
 .d3-wizard-group,
 .d3-bolus-group,
 .d3-carb-group {
+  cursor: default;
+}
+.d3-physical-group {
   cursor: default;
 }
 

@@ -298,6 +298,13 @@ function chartDailyFactory(el, options) {
       onCarbOut: options.onCarbOut,
     }), true, true);
 
+    poolBolus.addPlotType('physicalActivity', tideline.plot.physical(poolBolus, {
+      emitter: emitter,
+      timezoneAware: chart.options.timePrefs.timezoneAware,
+      onPhysicalHover: options.onPhysicalHover,
+      onPhysicalOut: options.onPhysicalOut,
+    }), true, true);
+
     // quick bolus data to wizard pool
     poolBolus.addPlotType('bolus', tideline.plot.quickbolus(poolBolus, {
       yScale: scaleBolus,

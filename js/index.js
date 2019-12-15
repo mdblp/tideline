@@ -58,6 +58,7 @@ module.exports = {
     suspend: require('./plot/suspend'), 
     wizard: require('./plot/wizard'),
     carb: require('./plot/carb'),
+    physical: require('./plot/physical'),
     stats: {
       puddle: require('./plot/stats/puddle'),
     },
