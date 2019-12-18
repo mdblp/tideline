@@ -104,6 +104,9 @@ function chartDailyFactory(el, options) {
       .label([{
         'main': t('Blood Glucose'),
         'light': ' ' + chart.options.bgUnits
+      },
+      {
+        'main': ' & ' + t('Physical Activity')
       }])
       .labelBaseline(options.labelBaseline)
       .legend(['bg'])
@@ -119,7 +122,7 @@ function chartDailyFactory(el, options) {
         'light': ' U'
       },
       {
-        'main': ' & '+t('Carbohydrates'),
+        'main': ' & ' + t('Carbohydrates'),
         'light': ' g'
       }])
       .labelBaseline(options.labelBaseline)
@@ -237,6 +240,28 @@ function chartDailyFactory(el, options) {
       yScale: scaleBG
     }), true, true);
 
+    // add background fill rectangles to BG pool
+    var scaleHeightBG = d3.scale.linear()
+      .domain([0, poolBG.height()])
+      .range([0, poolBG.height()]);
+
+    poolBG.addPlotType('fill', fill(poolBG, {
+      endpoints: chart.endpoints,
+      isDaily: true,
+      yScale: scaleHeightBG
+    }), true, true);
+
+    poolBG.addPlotType('physicalActivity', tideline.plot.physicalActivity(poolBG, {
+      bgUnits: chart.options.bgUnits,
+      classes: chart.options.bgClasses,
+      yScale: scaleBG,
+      emitter: emitter,
+      subdueOpacity: 0.4,
+      timezoneAware: chart.options.timePrefs.timezoneAware,
+      onPhysicalHover: options.onPhysicalHover,
+      onPhysicalOut: options.onPhysicalOut,
+    }), true, true);
+
     // add CBG data to BG pool
     poolBG.addPlotType('cbg', tideline.plot.cbg(poolBG, {
       bgUnits: chart.options.bgUnits,
@@ -296,13 +321,6 @@ function chartDailyFactory(el, options) {
       timezoneAware: chart.options.timePrefs.timezoneAware,
       onCarbHover: options.onCarbHover,
       onCarbOut: options.onCarbOut,
-    }), true, true);
-
-    poolBolus.addPlotType('physicalActivity', tideline.plot.physical(poolBolus, {
-      emitter: emitter,
-      timezoneAware: chart.options.timePrefs.timezoneAware,
-      onPhysicalHover: options.onPhysicalHover,
-      onPhysicalOut: options.onPhysicalOut,
     }), true, true);
 
     // quick bolus data to wizard pool
