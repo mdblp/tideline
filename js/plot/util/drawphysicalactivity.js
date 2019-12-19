@@ -20,6 +20,8 @@ var _ = require('lodash');
 
 var dt = require('../../data/util/datetime');
 
+var picto = require('../../../img/physicalactivity.png');
+
 module.exports = function(pool, opts) {
   opts = opts || {};
 
@@ -38,18 +40,41 @@ module.exports = function(pool, opts) {
 
   _.defaults(opts, defaults);
 
-  var top = opts.yScale.range()[0];
+  var height = pool.height() - 20;
+
+  var calculateWidth = function(d) {
+    var s = Date.parse(d.normalTime);
+    var units = d.duration.units;
+    var msfactor = 1000;
+    switch (units) {
+      case 'seconds':
+        msfactor = msfactor;
+        break;
+      case 'minutes': 
+        msfactor = msfactor * 60;
+        break;
+      case 'hours':
+        msfactor = msfactor * 60 * 60;
+        break;
+      default:
+        msfactor = msfactor;
+        break;
+    }
+    var e = Date.parse(dt.addDuration(s, d.duration.value * msfactor)); 
+    return opts.xScale(e) - opts.xScale(s);
+  };
 
   var xPosition = function(d) {
     var x = opts.xScale(Date.parse(d.normalTime));
     return x;
   };
 
+  var offset = height / 5;
+
   return {
-    intensity: function(intens) {
-      console.log("intensity");
-      console.log(intens);  
-      intens.append('rect')
+
+    picto: function(pa) {
+      pa.append('rect')
         .attr({
           x: function(d) {
             return xPosition(d);
@@ -58,20 +83,50 @@ module.exports = function(pool, opts) {
             return 0;
           },
           width: function(d) {
-            console.log(d);
-            var s = Date.parse(d.normalTime);
-            var duration = d.duration.value;
-            var e = Date.parse(dt.addDuration(s, duration * 60 * 1000)); 
-            return opts.xScale(e) - opts.xScale(s);
+            return calculateWidth(d);
           }, 
           height: function() {
-            // return top;
-            return pool.height();
+            return offset;
           },
-          class: function(d) {
-            var i = d.reportedIntensity;
-            return 'd3-rect-pa-' + i + ' d3-bolus';
+          class: 'd3-rect-pa d3-pa',
+          id: function(d) {
+            return 'pa_' + d.id;
+          }
+        });
+      pa.append('image')
+        .attr({
+          x: function(d) {
+            return xPosition(d);
           },
+          y: function(d) {
+            return 0;
+          },
+          width: function(d) {
+            return calculateWidth(d);
+          }, 
+          height: function() {
+            return offset;
+          },
+          'xlink:href' : picto,
+        });
+
+    },
+    activity: function(pa) {
+      pa.append('rect')
+        .attr({
+          x: function(d) {
+            return xPosition(d);
+          },
+          y: function(d) {
+            return offset;
+          },
+          width: function(d) {
+            return calculateWidth(d);
+          }, 
+          height: function() {
+            return pool.height() - offset;
+          },
+          class: 'd3-rect-pa d3-pa',
           id: function(d) {
             return 'pa_' + d.id;
           }

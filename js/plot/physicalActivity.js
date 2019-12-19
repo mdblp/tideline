@@ -55,7 +55,8 @@ module.exports = function(pool, opts) {
         return d.reportedIntensity != null;
       });
 
-      drawpa.intensity(intensity);
+      drawpa.picto(intensity);
+      drawpa.activity(intensity);
 
       physicalActivty.exit().remove();
 
@@ -64,7 +65,6 @@ module.exports = function(pool, opts) {
 
       // tooltips
       selection.selectAll('.d3-pa-group').on('mouseover', function(d) {
-        console.log(d);
         if (d.reportedIntensity) {
           var parentContainer = document.getElementsByClassName('patient-data')[0].getBoundingClientRect();
           var container = this.getBoundingClientRect();
