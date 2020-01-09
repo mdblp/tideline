@@ -12,14 +12,14 @@
   "main": "js/index.js",
   "license": "BSD-2-Clause",
   "scripts": {
-    "clean": "./node_modules/.bin/rimraf ./dist/*",
+    "clean": "rimraf ./dist/*",
     "prebuild": "npm run clean",
-    "build": "NODE_ENV=production ./node_modules/.bin/webpack --optimize-minimize",
-    "test": "TZ=UTC NODE_ENV=test ./node_modules/karma/bin/karma start",
-    "browser-tests": "./node_modules/karma/bin/karma start --browsers Chrome",
-    "test-watch": "TZ=UTC NODE_ENV=test ./node_modules/karma/bin/karma start --no-single-run --reporters=mocha",
+    "build": "NODE_ENV=production webpack --optimize-minimize",
+    "test": "TZ=UTC NODE_ENV=test karma start",
+    "browser-tests": "karma start --browsers Chrome",
+    "test-watch": "TZ=UTC NODE_ENV=test karma start --no-single-run --reporters=mocha",
     "start": "NODE_ENV=development webpack-dev-server -d --cache --colors --progress --content-base example --port 8081",
-    "lint": "NODE_ENV=test ./node_modules/.bin/eslint js plugins example test"
+    "lint": "NODE_ENV=test eslint js plugins example test"
   },
   "dependencies": {
     "bows": "1.7.2",
