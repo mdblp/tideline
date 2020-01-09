@@ -55,9 +55,6 @@ const styleLoaderConfiguration = {
   use: [
     {
       loader: 'style-loader',
-      options: {
-        sourceMap: true,
-      },
     },
     {
       loader: 'css-loader',
@@ -67,7 +64,7 @@ const styleLoaderConfiguration = {
         modules: {
           localIdentName,
         },
-        sourceMap: isDev || isTest,
+        sourceMap: true,
       },
     },
     {
