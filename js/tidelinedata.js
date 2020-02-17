@@ -35,7 +35,7 @@ var startTimer = __DEV__ ? function(name) { console.time(name); } : _.noop;
 var endTimer = __DEV__ ? function(name) { console.timeEnd(name); } : _.noop;
 
 function TidelineData(data, opts) {
-  var REQUIRED_TYPES = ['basal', 'bolus', 'wizard', 'cbg', 'message', 'smbg', 'pumpSettings', 'physicalActivity'];
+  var REQUIRED_TYPES = ['basal', 'bolus', 'wizard', 'cbg', 'message', 'smbg', 'pumpSettings', 'physicalActivity', 'deviceEvent'];
 
   opts = opts || {};
   var bgUnits = opts.bgUnits || MGDL_UNITS;
@@ -526,6 +526,19 @@ function TidelineData(data, opts) {
   });
   endTimer('diabetesData');
 
+  startTimer('deviceEvents');
+  var parameters = _.filter( data,  {type: 'deviceEvent', subType: 'deviceParameter'});
+  var sortedParameters =_.orderBy(parameters,['time'], ['desc']);
+
+  console.log('sortedParameters');
+  for (var i = 0; i < sortedParameters.length; ++i) {
+    const item = sortedParameters[i];
+    console.log(item);
+  }
+  // this.deviceParameters = _.last(parameters);
+  this.deviceParameters = _.last(parameters);
+  endTimer('deviceEvents');
+
   this.setBGPrefs();
 
   this.activeScheduleIsAutomated = function() {
@@ -573,6 +586,7 @@ function TidelineData(data, opts) {
             'reservoirChange',
             'prime',
             'calibration',
+            'deviceParameter'
           ];
           if (_.includes(includedSubtypes, d.subType)) {
             return true;
