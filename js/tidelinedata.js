@@ -28,7 +28,7 @@ var BasalUtil = require('./data/basalutil');
 var BolusUtil = require('./data/bolusutil');
 var BGUtil = require('./data/bgutil');
 var dt = require('./data/util/datetime');
-var { MGDL_UNITS, DEFAULT_BG_BOUNDS, BG_CLAMP_THRESHOLD, AUTOMATED_BASAL_LABELS } = require('./data/util/constants');
+var { MGDL_UNITS, DEFAULT_BG_BOUNDS, BG_CLAMP_THRESHOLD, AUTOMATED_BASAL_LABELS,DEVICE_PARAMS_OFFSET } = require('./data/util/constants');
 
 var log = __DEV__ ? require('bows')('TidelineData') : _.noop;
 var startTimer = __DEV__ ? function(name) { console.time(name); } : _.noop;
@@ -528,15 +528,33 @@ function TidelineData(data, opts) {
 
   startTimer('deviceEvents');
   var parameters = _.filter( data,  {type: 'deviceEvent', subType: 'deviceParameter'});
-  var sortedParameters =_.orderBy(parameters,['time'], ['desc']);
+  var sortedParameters =_.orderBy(parameters,['normaltime'], ['desc']);
 
-  console.log('sortedParameters');
-  for (var i = 0; i < sortedParameters.length; ++i) {
-    const item = sortedParameters[i];
-    console.log(item);
+  this.deviceParameters = [];
+  if (sortedParameters.length > 1) {
+    var first = sortedParameters[0];
+    var group = { 
+      normalTime: first.normalTime,
+      id: first.id,
+      params: [first]
+    }
+    for (var i = 1; i < sortedParameters.length; ++i) {      
+      const item = sortedParameters[i];
+      if (dt.difference(item.normalTime, group.normalTime) < DEVICE_PARAMS_OFFSET) {
+        // add to current group
+        group.params.push(item);
+      } else {
+        this.deviceParameters.push(group);
+        group = { 
+          normalTime: item.normalTime,
+          id: item.id,
+          params: [item]
+        }
+      }
+    }
+    this.deviceParameters.push(group);
   }
-  // this.deviceParameters = _.last(parameters);
-  this.deviceParameters = _.last(parameters);
+  // this.deviceParameters = parameters.slice(0,parameters.length-1);
   endTimer('deviceEvents');
 
   this.setBGPrefs();

@@ -28,7 +28,7 @@ module.exports = function(pool, opts) {
 
   _.defaults(opts, defaults);
 
-  var picto = require('../../img/sitechange-diabeloop.png');
+  // var picto = require('../../img/sitechange-diabeloop.png');
   var height = pool.height();
   var offset = height / 5 ;
   var width = 40;
@@ -39,20 +39,15 @@ module.exports = function(pool, opts) {
   function parameter(selection) {
     var yPos = opts.r + opts.padding;
     opts.xScale = pool.xScale().copy();
-    // console.log(opts.data);
-    console.log('selection');
-    console.log(selection);
     selection.each(function(currentData) {
       console.log("deviceParameter");
-      // console.log(opts.data);
-      var filteredData = _.filter(currentData, {
-          subType: 'deviceParameter'
-        });
-      // var filteredData = currentData;
+      console.log('opts.data');
+      console.log(opts.data);
+      var data = opts.data;
       var allParameters = d3
         .select(this)
         .selectAll('circle.d3-param-only')
-        .data(filteredData, function(d) {
+        .data(data, function(d) {
           return d.id;
         });
       var parameterGroup = allParameters.enter()
@@ -91,33 +86,16 @@ module.exports = function(pool, opts) {
       class: 'd3-param-text'
       });
 
-      // parameterGroup.append('image')
-      //   .attr({
-      //     x: function(d) {
-      //       return xPos(d);
-      //     },
-      //     y: function(d) {
-      //       return 0;
-      //     },
-      //     width: width, 
-      //     height: function() {
-      //       return offset;
-      //     },
-      //     'xlink:href': picto,
-      //   });
 
       allParameters.exit().remove();
 
       // tooltips
       selection.selectAll('.d3-param-group').on('mouseover', function() {         console.log('addToolTip deviceParam')
-        console.log(parameter);
         var parentContainer = document
           .getElementsByClassName('patient-data')[0]
           .getBoundingClientRect();
-        console.log(parentContainer);
         var container = this.getBoundingClientRect();
         container.y = container.top - parentContainer.top;
-        console.log(container);
 
         parameter.addTooltip(d3.select(this).datum(), container);
       });
@@ -131,9 +109,6 @@ module.exports = function(pool, opts) {
   }
 
   parameter.addTooltip = function(d, rect) {
-    console.log('parameter.addTooltip');
-    console.log(d);
-    console.log(opts);
     if (_.get(opts, 'onParameterHover', false)) {
       opts.onParameterHover({
         data: d,
