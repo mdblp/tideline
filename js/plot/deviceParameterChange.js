@@ -28,7 +28,7 @@ module.exports = function(pool, opts) {
 
   _.defaults(opts, defaults);
 
-  // var picto = require('../../img/sitechange-diabeloop.png');
+  var picto = require('../../img/parameter.png');
   var height = pool.height();
   var offset = height / 5 ;
   var width = 40;
@@ -40,9 +40,6 @@ module.exports = function(pool, opts) {
     var yPos = opts.r + opts.padding;
     opts.xScale = pool.xScale().copy();
     selection.each(function(currentData) {
-      console.log("deviceParameter");
-      console.log('opts.data');
-      console.log(opts.data);
       var data = opts.data;
       var allParameters = d3
         .select(this)
@@ -58,33 +55,21 @@ module.exports = function(pool, opts) {
             return 'param_group_' + d.id;
           }
         });
-        
-      parameterGroup.append('circle').attr({
-        cx: xPos,
-        cy: yPos,
-        r: function() {
-            return opts.r;
+
+      parameterGroup.append('image')
+        .attr({
+          x: function(d) {
+            return xPos(d);
           },
-        height: function() {
-          return offset;
-        },
-      'stroke-width': 0,
-        class: 'd3-param',
-        id: function(d) {
-          return 'param_' + d.id;
-        }
-      });
-  
-      parameterGroup
-      .append('text')
-      .text(function(d) {
-        return 'P';
-      })
-      .attr({
-        x: xPos,
-        y: yPos,
-      class: 'd3-param-text'
-      });
+          y: function(d) {
+            return 0;
+          },
+          width: width, 
+          height: function() {
+            return offset;
+          },
+          'xlink:href': picto,
+        });
 
 
       allParameters.exit().remove();
