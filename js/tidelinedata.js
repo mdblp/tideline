@@ -538,7 +538,7 @@ function TidelineData(data, opts) {
       id: first.id,
       params: [first]
     }
-    for (var i = 1; i < sortedParameters.length; ++i) {      
+    for (let i = 1; i < sortedParameters.length; ++i) {      
       const item = sortedParameters[i];
       if (dt.difference(item.normalTime, group.normalTime) < DEVICE_PARAMS_OFFSET) {
         // add to current group

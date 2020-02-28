@@ -29,17 +29,15 @@ module.exports = function(pool, opts) {
   _.defaults(opts, defaults);
 
   var picto = require('../../img/parameter.png');
-  var height = pool.height();
-  var offset = height / 5 ;
+  var offset = pool.height() / 5 ;
   var width = 40;
   var xPos = function(d) {
     return opts.xScale(Date.parse(d.normalTime)) - (width / 2) ;
   };
 
   function parameter(selection) {
-    var yPos = opts.r + opts.padding;
     opts.xScale = pool.xScale().copy();
-    selection.each(function(currentData) {
+    selection.each(function() {
       var data = opts.data;
       var allParameters = d3
         .select(this)
@@ -64,7 +62,7 @@ module.exports = function(pool, opts) {
           y: function(d) {
             return 0;
           },
-          width: width, 
+          width, 
           height: function() {
             return offset;
           },
@@ -75,7 +73,7 @@ module.exports = function(pool, opts) {
       allParameters.exit().remove();
 
       // tooltips
-      selection.selectAll('.d3-param-group').on('mouseover', function() {         console.log('addToolTip deviceParam')
+      selection.selectAll('.d3-param-group').on('mouseover', () => {
         var parentContainer = document
           .getElementsByClassName('patient-data')[0]
           .getBoundingClientRect();

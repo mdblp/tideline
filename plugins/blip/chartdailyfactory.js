@@ -189,9 +189,6 @@ function chartDailyFactory(el, options) {
 
   chart.load = function(tidelineData) {
     var data = tidelineData.data;
-
-    console.log('tidelineData:');
-    console.log(tidelineData);
     chart.tidelineData = tidelineData;
 
     var basalUtil = tidelineData.basalUtil;
