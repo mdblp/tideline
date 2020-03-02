@@ -73,7 +73,7 @@ module.exports = function(pool, opts) {
       allParameters.exit().remove();
 
       // tooltips
-      selection.selectAll('.d3-param-group').on('mouseover', () => {
+      selection.selectAll('.d3-param-group').on('mouseover', function() {
         var parentContainer = document
           .getElementsByClassName('patient-data')[0]
           .getBoundingClientRect();
