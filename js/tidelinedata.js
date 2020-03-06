@@ -533,20 +533,20 @@ function TidelineData(data, opts) {
   this.deviceParameters = [];
   if (sortedParameters.length > 0) {
     var first = sortedParameters[0];
-    var group = { 
+    var group = {
       normalTime: first.normalTime,
       id: first.id,
       params: [first]
     }
-    if (sortedParameters > 1) {
-      for (let i = 1; i < sortedParameters.length; ++i) {  
+    if (sortedParameters.length > 1) {
+      for (let i = 1; i < sortedParameters.length; ++i) {
         const item = sortedParameters[i];
         if (dt.difference(item.normalTime, group.normalTime) < DEVICE_PARAMS_OFFSET) {
           // add to current group
           group.params.push(item);
         } else {
           this.deviceParameters.push(group);
-          group = { 
+          group = {
             normalTime: item.normalTime,
             id: item.id,
             params: [item]
@@ -556,7 +556,6 @@ function TidelineData(data, opts) {
     }
     this.deviceParameters.push(group);
   }
-  // this.deviceParameters = parameters.slice(0,parameters.length-1);
   endTimer('deviceEvents');
 
   this.setBGPrefs();
