@@ -113,7 +113,15 @@ var basicsState = function (manufacturer) {
         selector: SummaryGroup,
         selectorOptions: {
           primary: { path: 'smbg', key: 'total', label: t('Avg per day'), average: true },
-          rows: [
+          rows: 
+            (manufacturer === 'Diabeloop' ? 
+              [
+                [
+                  { path: 'smbg', key: 'verylow', labelOpts: {type: 'bg', key: 'verylow'}, percentage: true },
+                  { path: 'smbg', key: 'veryhigh', labelOpts: {type: 'bg', key: 'veryhigh'}, percentage: true }
+                ]
+              ] : 
+              [
             [
               { path: 'smbg', key: 'meter', label: t('Meter'), percentage: true },
               { path: 'smbg', key: 'manual', label: t('Manual'), percentage: true },
@@ -124,6 +132,7 @@ var basicsState = function (manufacturer) {
               { path: 'smbg', key: 'veryhigh', labelOpts: {type: 'bg', key: 'veryhigh'}, percentage: true }
             ]
           ]
+            )
         },
         settingsTogglable: togglableState.off,
         title: t('BG readings'),
