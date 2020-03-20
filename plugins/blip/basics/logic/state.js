@@ -84,18 +84,28 @@ var basicsState = function (manufacturer) {
         selector: SummaryGroup,
         selectorOptions: {
           primary: { key: 'total', label: t('Avg per day'), average: true },
-          rows: [
+          rows: 
+          (manufacturer === 'Diabeloop' ? 
+            [ 
+              [ 
+                { key: 'wizard', label: t('Calculator'), percentage: true  },
+                { key: 'manual', label: t('Micro-bolus'), percentage: true  },
+                { key: 'interrupted', label: t('Interrupted'), percentage: true  } 
+              ]
+            ] :
             [
-              { key: 'wizard', label: t('Calculator'), percentage: true  },
-              { key: 'correction', label: t('Correction'), percentage: true  },
-              { key: 'override', label: t('Override'), percentage: true  }
-            ],
-            [
-              { key: 'extended', label: t('Extended'), percentage: true  },
-              { key: 'interrupted', label :t('Interrupted'), percentage: true  },
-              { key: 'underride', label: t('Underride'), percentage: true  }
-            ]
-          ]
+              [
+                { key: 'wizard', label: t('Calculator'), percentage: true  },
+                { key: 'correction', label: t('Correction'), percentage: true  },
+                { key: 'override', label: t('Override'), percentage: true  }
+              ],
+              [
+                { key: 'extended', label: t('Extended'), percentage: true  },
+                { key: 'interrupted', label :t('Interrupted'), percentage: true  },
+                { key: 'underride', label: t('Underride'), percentage: true  }
+              ]
+            ] 
+          )
         },
         settingsTogglable: togglableState.off,
         title: t('Bolusing'),
@@ -122,16 +132,16 @@ var basicsState = function (manufacturer) {
                 ]
               ] : 
               [
-            [
-              { path: 'smbg', key: 'meter', label: t('Meter'), percentage: true },
-              { path: 'smbg', key: 'manual', label: t('Manual'), percentage: true },
-              { path: 'calibration', key: 'calibration', label: t('Calibrations') }
-            ],
-            [
-              { path: 'smbg', key: 'verylow', labelOpts: {type: 'bg', key: 'verylow'}, percentage: true },
-              { path: 'smbg', key: 'veryhigh', labelOpts: {type: 'bg', key: 'veryhigh'}, percentage: true }
-            ]
-          ]
+                [
+                  { path: 'smbg', key: 'meter', label: t('Meter'), percentage: true },
+                  { path: 'smbg', key: 'manual', label: t('Manual'), percentage: true },
+                  { path: 'calibration', key: 'calibration', label: t('Calibrations') }
+                ],
+                [
+                  { path: 'smbg', key: 'verylow', labelOpts: {type: 'bg', key: 'verylow'}, percentage: true },
+                  { path: 'smbg', key: 'veryhigh', labelOpts: {type: 'bg', key: 'veryhigh'}, percentage: true }
+                ]
+              ] 
             )
         },
         settingsTogglable: togglableState.off,
