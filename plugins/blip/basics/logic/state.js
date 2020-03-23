@@ -60,13 +60,22 @@ var basicsState = function (manufacturer) {
         selector: SummaryGroup,
         selectorOptions: {
           primary: { key: 'total', label: t('Basal Events') },
-          rows: [
+          rows: 
+          (manufacturer === 'Diabeloop' ? 
             [
-              { key: 'temp', label: t('Temp Basals') },
-              { key: 'suspend', label: t('Suspends') },
-              { key: 'automatedStop', label: t('{{automatedLabel}} Exited', { automatedLabel }) },
-            ],
-          ]
+              [
+                { key: 'temp', label: t('Temp Basals') },
+                { key: 'automatedStop', label: t('{{automatedLabel}} Exited', { automatedLabel }) },
+              ],
+            ] : 
+            [
+              [
+                { key: 'temp', label: t('Temp Basals') },
+                { key: 'suspend', label: t('Suspends') },
+                { key: 'automatedStop', label: t('{{automatedLabel}} Exited', { automatedLabel }) },
+              ],
+            ] 
+          )
         },
         settingsTogglable: togglableState.off,
         title: 'Basals',
