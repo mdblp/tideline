@@ -64,7 +64,8 @@ var basicsState = function (manufacturer) {
           (manufacturer === 'Diabeloop' ? 
             [
               [
-                { key: 'temp', label: t('Temp Basals') },
+                // { key: 'temp', label: t('Temp Basals') },
+                { key: 'automatedStart', label: t('{{automatedLabel}}', { automatedLabel }) },
                 { key: 'automatedStop', label: t('{{automatedLabel}} Exited', { automatedLabel }) },
               ],
             ] : 
