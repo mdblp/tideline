@@ -5,6 +5,14 @@ Library for Tidepool's timeline-style diabetes data visualization(s) used in Bli
 ### Changed
 - PT-1198 remove unused items in Basics page
 
+## 1.8.0 - 2020-03-20
+### Changed
+- PT-1203 More info in "No Data" message is null
+
+## 1.7.3 - 2020-03-20
+### Fixed 
+- PT-1165 Device Parameters are not displayed when fetching a non default period
+
 ## 1.7.2 - 2020-03-10
 ### Changed
 - PT-1104 Update graph legend with the right items (Remove delivered/scheduled, add loop mode)

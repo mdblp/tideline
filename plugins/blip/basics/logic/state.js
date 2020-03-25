@@ -79,7 +79,7 @@ var basicsState = function (manufacturer) {
           )
         },
         settingsTogglable: togglableState.off,
-        title: 'Basals',
+        title: t('Basals'),
         type: 'basal'
       },
       boluses: {
@@ -167,7 +167,7 @@ var basicsState = function (manufacturer) {
         hoverDisplay: InfusionHoverDisplay,
         id: 'siteChanges',
         index: 3,
-        noDataMessage: t('Infusion site changes are not yet available for all pumps. Coming soon!'),
+        noDataMessage: (manufacturer === 'Diabeloop') ? '': t('Infusion site changes are not yet available for all pumps. Coming soon!'),
         togglable: togglableState.off,
         selector: SiteChangeSelector,
         selectorOptions: {
