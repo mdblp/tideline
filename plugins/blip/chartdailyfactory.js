@@ -79,6 +79,7 @@ function chartDailyFactory(el, options) {
   };
 
   chart.setupPools = function() {
+    log.info('setupPools');
     // top x-axis pool
     poolXAxis = chart.newPool()
       .id('poolXAxis', chart.poolGroup())
@@ -184,18 +185,14 @@ function chartDailyFactory(el, options) {
       type: 'basal'
     });
 
+    log.info('setupPools done');
     return chart;
   };
 
   chart.load = function(tidelineData) {
+    log.info('Loading...');
     var data = tidelineData.data;
     chart.tidelineData = tidelineData;
-
-    var basalUtil = tidelineData.basalUtil;
-    var bolusUtil = tidelineData.bolusUtil;
-    var cbgUtil = tidelineData.cbgUtil;
-    var settingsUtil = tidelineData.settingsUtil;
-    var smbgUtil = tidelineData.smbgUtil;
 
     // initialize chart with data
     chart.data(tidelineData).setAxes().setNav().setScrollNav();
@@ -308,10 +305,12 @@ function chartDailyFactory(el, options) {
       onSMBGOut: options.onSMBGOut,
     }), true, true);
 
+    log.debug('poolBG', poolBG);
+
     // TODO: when we bring responsiveness in
     // decide number of ticks for these scales based on container height?
     // bolus & carbs pool
-    var scaleBolus = scales.bolus(tidelineData.grouped.bolus.concat(tidelineData.grouped.wizard), poolBolus);
+    var scaleBolus = scales.bolus(tidelineData.grouped.bolus, poolBolus);
     var scaleCarbs = options.dynamicCarbs ? scales.carbs(tidelineData.grouped.wizard, poolBolus) : null;
     // set up y-axis for bolus
     poolBolus.yAxis(d3.svg.axis()
@@ -408,13 +407,14 @@ function chartDailyFactory(el, options) {
       timezone: chart.options.timePrefs.timezoneName
     }), true, true);
 
+    log.info('Loading done');
     return chart;
   };
 
   // locate the chart around a certain datetime
   // if called without an argument, locates the chart at the most recent 24 hours of data
   chart.locate = function(datetime) {
-
+    log.info('locate', datetime);
     var start, end, atMostRecent = false;
 
     var mostRecent = function() {

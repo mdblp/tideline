@@ -17,7 +17,7 @@
 
 var d3 = require('d3');
 var _ = require('lodash');
-
+var crossfilter = require('crossfilter2');
 var Pool = require('./pool');
 var annotation = require('./plot/util/annotations/annotation');
 var Tooltips = require('./plot/util/tooltips/tooltip');
@@ -539,6 +539,8 @@ module.exports = function(emitter, opts) {
     }
     container.endpoints = endpoints;
 
+    log.info('Endpoints', endpoints, 'initialEndpoints', container.initialEndpoints);
+
     return container;
   };
 
@@ -546,8 +548,10 @@ module.exports = function(emitter, opts) {
     if (!arguments.length) return renderedData;
     var start = new Date(dt.addDays(a[0], -buffer)).toISOString();
     var end = new Date(dt.addDays(a[1], buffer)).toISOString();
-    var filtered = tidelineData.dataByDate.filter([start, end]);
+    var filter = crossfilter(data).dimension((d) => d.normalTime);
+    var filtered = filter.filterAll().filter([start, end]);
     renderedData = filtered.top(Infinity).reverse();
+    log.info('renderedData', a, start, end, renderedData.length);
 
     return container;
   };

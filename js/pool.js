@@ -1,15 +1,15 @@
 /*
  * == BSD2 LICENSE ==
  * Copyright (c) 2014, Tidepool Project
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the associated License, which is identical to the BSD 2-Clause
  * License as published by the Open Source Initiative at opensource.org.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the License for more details.
- * 
+ *
  * You should have received a copy of the License along with this program; if
  * not, you can obtain one from Tidepool Project at tidepool.org.
  * == BSD2 LICENSE ==
@@ -22,10 +22,10 @@ var _ = require('lodash');
 
 var legend = require('./plot/util/legend');
 
-var log = require('bows')('Pool');
-
+var bows = require('bows');
 
 function Pool (container) {
+  var log = bows('Pool');
 
   var id, label, labelBaseline = 4, legends = [],
     index, heightRatio, gutterWeight, hidden = false, yPosition,
@@ -39,8 +39,8 @@ function Pool (container) {
     tooltips;
 
   this.render = function(selection, poolData) {
-    var pool = this;
     plotTypes.forEach(function(plotType) {
+      log.debug(id, plotType);
       if (container.dataFill[plotType.type]) {
         plotType.data = _.filter(poolData, {'type': plotType.type});
         var dataGroup = group.selectAll('#' + id + '_' + plotType.type).data([plotType.data]);
@@ -54,20 +54,14 @@ function Pool (container) {
         statsGroup.enter().append('g').attr('id', id + '_stats').call(plotType.plot);
       }
       else {
-        log('WARNING: I am confused: the only plot type not classified as dataFill should be stats.');
+        log.warn('WARNING: I am confused: the only plot type not classified as dataFill should be stats.');
       }
     });
 
     this.drawAxes();
     this.updateAxes();
-    if (__DEV__ === true) {
-      var that = this;
-      setTimeout(function() { that.drawLabel(); that.drawLegend(); }, 250);
-    }
-    else {
-      this.drawLabel();
-      this.drawLegend();
-    }
+    this.drawLabel();
+    this.drawLegend();
   };
 
   this.clear = function() {
@@ -175,6 +169,7 @@ function Pool (container) {
   this.id = function(x, selection) {
     if (!arguments.length) return id;
     id = x;
+    log = bows(id);
     group = selection.append('g').attr('id', id);
     return this;
   };
@@ -271,6 +266,7 @@ function Pool (container) {
   };
 
   this.addPlotType = function (dataType, plotFunction, dataFillBoolean, panBoolean) {
+    log.info('addPlotType', dataType, plotFunction, dataFillBoolean, panBoolean);
     plotTypes.push({
       type: dataType,
       plot: plotFunction,

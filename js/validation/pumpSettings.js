@@ -111,8 +111,8 @@ module.exports = schema(
     })
   )],
   {
-    basalSchedules: schema().array(
-      schema(
+    basalSchedules: schema().oneOf(
+      schema().array(schema(
         {
           name: schema().string().minLength(1),
           value: schema().array(
@@ -124,7 +124,11 @@ module.exports = schema(
             )
           )
         }
-      )
+      )),
+      schema({
+        Normal: schema().ifExists().array(schema({})),
+        Sick: schema().ifExists().array(schema({})),
+      })
     ),
     deviceTime: schema().ifExists().isDeviceTime(),
   }

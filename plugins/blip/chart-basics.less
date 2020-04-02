@@ -1,0 +1,208 @@
+/*
+ * == BSD2 LICENSE ==
+ * Copyright (c) 2020, Diabeloop
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the associated License, which is identical to the BSD 2-Clause
+ * License as published by the Open Source Initiative at opensource.org.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the License for more details.
+ *
+ * You should have received a copy of the License along with this program; if
+ * not, you can obtain one from the Open Source Initiative (OSI) at
+ * https://opensource.org/licenses/BSD-2-Clause.
+ * == BSD2 LICENSE ==
+ */
+
+ /* Common properties */
+div.dashboard-section {
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
+  background-color: white;
+
+  h3 {
+    color: #281a45;
+    font-size: 15px;
+    font-weight: bold;
+    margin: 0;
+    padding: 15px 15px 15px 10px;
+  }
+
+  div.dashboard-section-summary {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    margin-left: 10px;
+    cursor: default;
+
+    div.summary-info {
+      div.info-button {
+        display: flex;
+        margin-right: 3px;
+        border-bottom-style: solid;
+        border-bottom-width: 3px;
+        cursor: pointer;
+
+        p {
+          margin: 0;
+        }
+        p.info-other-percentage {
+          font-size: 11px;
+        }
+      }
+
+      div.info-button.info-primary {
+        justify-content: space-evenly;
+        flex-direction: column;
+        text-align: center;
+        padding-left: 1em;
+        padding-right: 1em;
+        padding-top: 0.3em;
+        padding-bottom: 0.3em;
+        font-size: 14px;
+        cursor: pointer;
+
+        p.summary-total {
+          font-size: 11px;
+        }
+      }
+
+      div.info-button.info-other {
+        font-size: 12px;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 4px 15px;
+      }
+    }
+    div.summary-info-primary {
+      flex: 1 1 20%;
+    }
+    div.summary-info-others {
+      flex: 1 1 80%;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+
+      div.info-other {
+        flex-grow: 1;
+      }
+    }
+  }
+
+  div.chart-calendar {
+    margin-left: 10px;
+    font-size: 12px;
+
+    div.chart-calendar-weekdays {
+      color: #bcbec0;
+      display: grid;
+      grid-template-columns: repeat(7,1fr);
+      grid-gap: 1em;
+      overflow: hidden;
+
+      div.char-calendar-weekday {
+        padding-left: 0.5em;
+      }
+    }
+    div.chart-calendar-days {
+      display: grid;
+      grid-template-columns: repeat(7,1fr);
+      grid-gap: 1em;
+
+      div.chart-calendar-day {
+        cursor: pointer;
+        width: 122px;
+        height: 122px;
+
+        p {
+          margin: 0;
+        }
+
+        div.chart-calendar-day-icon {
+          display: flex;
+          margin-top: 0.5em;
+          margin-bottom: 0.5em;
+        }
+
+        &.day-disabled {
+          color: #bcbec0;
+          background-color: #f9fcfd;
+          cursor: default;
+        }
+
+        &:hover:not(.day-disabled) {
+          div.chart-calendar-day-icon {
+            visibility: hidden;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Bolus part */
+div.dashboard-section-bolus {
+  div.dashboard-section-summary {
+    background-color: white;
+
+    div.info-button {
+      color: #6d6d6d;
+      background-color: #eef5f9;
+      border-bottom-color: #6fc3bb;
+
+      &:hover {
+        color: white;
+        background-color: #6fc3bb;
+        border-bottom-color: #6fc3bb;
+      }
+    }
+    div.info-button.info-button-selected {
+      color: white;
+      background-color: #6fc3bb;
+      border-bottom-color: #eef5f9;
+    }
+    div.info-button.info-button-disabled {
+      color: #979797;
+      background-color: #eef5f9;
+      border-bottom-color: #ccc;
+    }
+  }
+
+  div.chart-calendar {
+    div.chart-calendar-days {
+      div.chart-calendar-day {
+        background-color: #eef5f9;
+
+        &:hover:not(.day-disabled) {
+          background-color: #6fc3bb;
+        }
+
+        div.chart-calendar-day-icon {
+          svg {
+            g {
+              fill: #6fc3bb;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Device event / site change / reservoir change */
+div.dashboard-section-sitechange {
+  div.chart-calendar {
+    div.chart-calendar-days {
+      div.chart-calendar-day {
+        background-color: #eef5f9;
+
+        &:hover:not(.day-disabled) {
+          background-color: #6fc3bb;
+        }
+      }
+    }
+  }
+}

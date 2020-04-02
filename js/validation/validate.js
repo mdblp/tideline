@@ -47,6 +47,25 @@ var schemas = {
 };
 
 module.exports = {
+  validateOneRet: function(datum) {
+    if (typeof datum !== 'object' || datum === null || typeof datum.type !== 'string') {
+      log('Invalid datum parameter', datum);
+      return false;
+    }
+    const handler = _.get(schemas, datum.type, null);
+    if (typeof handler !== 'function') {
+      datum.errorMessage = `No schema defined for data.type[${datum.type}]`;
+      log(datum.errorMessage, datum);
+      return false;
+    }
+    try {
+      handler(datum);
+    } catch(e) {
+      datum.errorMessage = e.message;
+      return false;
+    }
+    return true;
+  },
   validateOne: function(datum, result) {
     result = result || {valid: [], invalid: []};
     var handler = schemas[datum.type];
