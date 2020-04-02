@@ -38,7 +38,7 @@ function SVGCalendarIcon(props) {
   let iconContent = null;
 
   if (numElements > 0) {
-    if (typeof icon !== 'undefined') {
+    if (typeof icon === 'string') {
       iconContent = (<image x="0" y="0" width="72" height="72" xlinkHref={icon} />);
     } else {
       const circles = [];
@@ -99,6 +99,7 @@ class CalendarDay extends React.Component {
     if (hover && Array.isArray(values) && values.length > 0) {
       switch (type) {
       case 'bolus':
+      case 'basal':
         hoverText = <span><br />{values.length.toString(10)}</span>;
         break;
       case 'reservoirChange':
@@ -106,9 +107,10 @@ class CalendarDay extends React.Component {
           hoverText = [];
           const nChanges = Math.min(3, values.length);
           for (let i = 0; i < nChanges; i++) {
-            const hour = moment.tz(values[i].normalTime, values[i].timezone).format(Constants.H_MM_A_FORMAT);
-            hoverText.push(<br key={`br-${values[i].id}`}/>);
-            hoverText.push(<span key={hour}>{hour}</span>);
+            const value = values[i];
+            const hour = moment.tz(value.normalTime, values[i].timezone).format(Constants.H_MM_A_FORMAT);
+            hoverText.push(<br key={`br-${value.id}`}/>);
+            hoverText.push(<span key={`span-${value.id}`}>{hour}</span>);
           }
           if (nChanges < values.length) {
             hoverText.push(<br key="br-more" />);
@@ -228,7 +230,10 @@ class ChartBasics extends React.Component {
 
     this.state = {
       bolus: {
-        selected: 'total'
+        selected: 'total',
+      },
+      basal: {
+        selected: 'total',
       }
     };
     this.log = bows('ChartBasics');
@@ -243,27 +248,86 @@ class ChartBasics extends React.Component {
         {[
           this.renderBolus(),
           this.renderSiteChange(),
+          this.renderBasal(),
         ]}
       </div>
     )
   }
 
-  renderBolus() {
-    const { bolus } = this.state;
+  renderBasal() {
+    const { basal: basalState } = this.state;
     const { diabeloopData } = this.props;
-    const { avgPerDay, nManual, nAutomated, nInterrupted, data } = diabeloopData.basicsData.data.bolus;
+    const { data, avgPerDay, nAutomated, nScheduled } = diabeloopData.basicsData.data.basal;
+    const total = data.length;
+    const pAutomated = Math.round(nAutomated * 100 / total);
+    const pScheduled = Math.round(nScheduled * 100 / total);
+
+    let btnPrimary = 'info-button info-primary';
+    let btnAutomated = 'info-button info-other';
+    let btnScheduled = btnAutomated;
+
+    let filter = null;
+    switch (basalState.selected) {
+    case 'total':
+      btnPrimary = `${btnPrimary} info-button-selected`;
+      break;
+    case 'automated':
+      btnAutomated = `${btnAutomated} info-button-selected`;
+      filter = (v) => v.deliveryType === 'automated';
+      break;
+    case 'scheduled':
+      btnScheduled = `${btnScheduled} info-button-selected`;
+      filter = (v) => v.deliveryType === 'scheduled';
+      break;
+    }
+
+    return (
+      <div key={'basal'} className="dashboard-section dashboard-section-basal">
+        <h3 className="dashboard-section-title">{t('Basals')}</h3>
+        <div className="dashboard-section-summary">
+          <div className="summary-info summary-info-primary">
+            <div className={btnPrimary} onClick={this.onClickBtnSummary} data-type="basal" data-btn="total">
+              <p className="summary-avg">{t('Avg per day')}</p>
+              <p>{avgPerDay}</p>
+              <p className="summary-total">{t('Total: {{total}}', { total })}</p>
+            </div>
+          </div>
+          <div className="summary-info summary-info-others">
+            <div className={btnAutomated} onClick={this.onClickBtnSummary} data-type="basal" data-btn="automated">
+              <p className="info-other-title">{Constants.AUTOMATED_BASAL_LABELS.Diabeloop}</p>
+              <p className="info-other-value">{nAutomated}</p>
+              <p className="info-other-percentage">({pAutomated}%)</p>
+            </div>
+            <div className={btnScheduled} onClick={this.onClickBtnSummary} data-type="basal" data-btn="scheduled">
+              <p className="info-other-title">{Constants.SCHEDULED_BASAL_LABELS.Diabeloop}</p>
+              <p className="info-other-value">{nScheduled}</p>
+              <p className="info-other-percentage">({pScheduled}%)</p>
+            </div>
+          </div>
+        </div>
+        <div className="dashboard-section-calendar">
+          <Calendar diabeloopData={diabeloopData} type="basal" filter={filter} onClick={this.onClickCalendarDay} />
+        </div>
+      </div>
+    );
+  }
+
+  renderBolus() {
+    const { bolus: bolusState } = this.state;
+    const { diabeloopData } = this.props;
+    const { data, avgPerDay, nManual, nAutomated, nInterrupted } = diabeloopData.basicsData.data.bolus;
     const total = data.length;
     const pManual = Math.round(nManual * 100 / total);
     const pAutomated = Math.round(nAutomated * 100 / total);
     const pInterrupted = Math.round(nInterrupted * 100 / total);
 
-    const btnPrimary = `info-button info-primary ${bolus.selected === 'total' ? 'info-button-selected' : ''}`;
-    const btnManual = `info-button info-other ${bolus.selected === 'manual' ? 'info-button-selected' : ''}`;
-    const btnAutomated = `info-button info-other ${bolus.selected === 'automated' ? 'info-button-selected' : ''}`;
-    const btnInterrupted = `info-button info-other ${bolus.selected === 'interrupted' ? 'info-button-selected' : ''}`;
+    const btnPrimary = `info-button info-primary ${bolusState.selected === 'total' ? 'info-button-selected' : ''}`;
+    const btnManual = `info-button info-other ${bolusState.selected === 'manual' ? 'info-button-selected' : ''}`;
+    const btnAutomated = `info-button info-other ${bolusState.selected === 'automated' ? 'info-button-selected' : ''}`;
+    const btnInterrupted = `info-button info-other ${bolusState.selected === 'interrupted' ? 'info-button-selected' : ''}`;
 
     let filter = null;
-    switch (bolus.selected) {
+    switch (bolusState.selected) {
     case 'manual':
       filter = (v) => v.manual;
       break;

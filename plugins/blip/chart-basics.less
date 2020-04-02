@@ -16,6 +16,8 @@
  * == BSD2 LICENSE ==
  */
 
+ @import '../../css/tideline-colors.less';
+
  /* Common properties */
 div.dashboard-section {
   display: flex;
@@ -46,6 +48,35 @@ div.dashboard-section {
         border-bottom-width: 3px;
         cursor: pointer;
 
+        &.info-primary {
+          justify-content: space-evenly;
+          flex-direction: column;
+          text-align: center;
+          padding-left: 1em;
+          padding-right: 1em;
+          padding-top: 0.3em;
+          padding-bottom: 0.3em;
+          font-size: 14px;
+          cursor: pointer;
+
+          p.summary-total {
+            font-size: 11px;
+          }
+        }
+
+        &.info-other {
+          font-size: 12px;
+          flex-direction: row;
+          justify-content: space-between;
+          padding: 4px 15px;
+        }
+
+        &.info-button-disabled {
+          color: #979797;
+          background-color: #eef5f9;
+          border-bottom-color: #ccc;
+        }
+
         p {
           margin: 0;
         }
@@ -54,28 +85,6 @@ div.dashboard-section {
         }
       }
 
-      div.info-button.info-primary {
-        justify-content: space-evenly;
-        flex-direction: column;
-        text-align: center;
-        padding-left: 1em;
-        padding-right: 1em;
-        padding-top: 0.3em;
-        padding-bottom: 0.3em;
-        font-size: 14px;
-        cursor: pointer;
-
-        p.summary-total {
-          font-size: 11px;
-        }
-      }
-
-      div.info-button.info-other {
-        font-size: 12px;
-        flex-direction: row;
-        justify-content: space-between;
-        padding: 4px 15px;
-      }
     }
     div.summary-info-primary {
       flex: 1 1 20%;
@@ -143,31 +152,24 @@ div.dashboard-section {
   }
 }
 
-/* Bolus part */
-div.dashboard-section-bolus {
+/* Basal part */
+div.dashboard-section-basal {
   div.dashboard-section-summary {
-    background-color: white;
-
     div.info-button {
       color: #6d6d6d;
       background-color: #eef5f9;
-      border-bottom-color: #6fc3bb;
+      border-bottom-color: @basal-automated;
 
       &:hover {
         color: white;
-        background-color: #6fc3bb;
-        border-bottom-color: #6fc3bb;
+        background-color: @basal-automated;
+        border-bottom-color: #6da1b5;
       }
     }
     div.info-button.info-button-selected {
       color: white;
-      background-color: #6fc3bb;
-      border-bottom-color: #eef5f9;
-    }
-    div.info-button.info-button-disabled {
-      color: #979797;
-      background-color: #eef5f9;
-      border-bottom-color: #ccc;
+      background-color: @basal-automated;
+      border-bottom-color: @basal;
     }
   }
 
@@ -177,13 +179,57 @@ div.dashboard-section-bolus {
         background-color: #eef5f9;
 
         &:hover:not(.day-disabled) {
-          background-color: #6fc3bb;
+          color: white;
+          background-color: @basal-automated;
         }
 
         div.chart-calendar-day-icon {
           svg {
             g {
-              fill: #6fc3bb;
+              fill: @basal-automated;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Bolus part */
+div.dashboard-section-bolus {
+  div.dashboard-section-summary {
+    div.info-button {
+      color: #6d6d6d;
+      background-color: #eef5f9;
+      border-bottom-color: @bolus;
+
+      &:hover {
+        color: white;
+        background-color: @bolus;
+        border-bottom-color: #54918b;
+      }
+    }
+    div.info-button.info-button-selected {
+      color: white;
+      background-color: @bolus;
+      border-bottom-color: #54918b;
+    }
+  }
+
+  div.chart-calendar {
+    div.chart-calendar-days {
+      div.chart-calendar-day {
+        background-color: #eef5f9;
+
+        &:hover:not(.day-disabled) {
+          color: white;
+          background-color: @bolus;
+        }
+
+        div.chart-calendar-day-icon {
+          svg {
+            g {
+              fill: @bolus;
             }
           }
         }
@@ -200,7 +246,7 @@ div.dashboard-section-sitechange {
         background-color: #eef5f9;
 
         &:hover:not(.day-disabled) {
-          background-color: #6fc3bb;
+          background-color: @bolus;
         }
       }
     }

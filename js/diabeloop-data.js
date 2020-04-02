@@ -148,19 +148,23 @@ class DiabeloopData {
       data: {
         reservoirChange: {
           data: [],
-          /** @type{Map<string, Array<object>>|null} 'YYYY-MM-DD' -> [{deviceEvent datum}] */
-          byDate: null,
+          /** @type{Map<string, Array<object>>} 'YYYY-MM-DD' -> [{deviceEvent datum}] */
+          byDate: new Map(),
         },
         cannulaPrime: { data: [] },
         tubingPrime: { data: [] },
         calibration: { data: [] },
         upload: { data: [] },
-        basal: { data: [] },
+        basal: {
+          data: [],
+          /** @type{Map<string, Array<object>>} 'YYYY-MM-DD' -> [{basal datum}] */
+          byDate: new Map(),
+        },
         bolus: {
           /** All data of type bolus & wizard */
           data: [],
-          /** @type{Map<string, Array<object>>|null} 'YYYY-MM-DD' -> [{bolus datum}] */
-          byDate: null,
+          /** @type{Map<string, Array<object>>} 'YYYY-MM-DD' -> [{bolus datum}] */
+          byDate: new Map(),
           avgPerDay: 0,
           nManual: 0,
           nAutomated: 0,
@@ -219,6 +223,11 @@ class DiabeloopData {
       if (typeof datum.errorMessage === 'string') {
         // Already flagged as invalid
         invalids.push(datum);
+        continue;
+      }
+
+      if (datum.type === 'basal' && datum.deliveryType === 'temp') {
+        // Ignore temp basal
         continue;
       }
 
@@ -794,6 +803,11 @@ class DiabeloopData {
     const nDatum = dataRange.length;
     for (let i = 0; i < nDatum; i++) {
       const datum = dataRange[i];
+
+      if (!basicsTypes.includes(datum.type)) {
+        continue;
+      }
+
       switch (datum.type) {
       case 'upload':
         // Ignore, already taken
@@ -802,15 +816,16 @@ class DiabeloopData {
         switch (datum.subType) {
         case 'reservoirChange':
           {
-            this.basicsData.data.reservoirChange.data.push(datum);
+            const reservoirChange = this.basicsData.data.reservoirChange;
+            reservoirChange.data.push(datum);
             const day = moment.tz(datum.normalTime, datum.timezone).format('YYYY-MM-DD');
-            if (this.basicsData.data.reservoirChange.byDate === null) {
-              this.basicsData.data.reservoirChange.byDate = new Map();
+            if (reservoirChange.byDate === null) {
+              reservoirChange.byDate = new Map();
             }
-            if (this.basicsData.data.reservoirChange.byDate.has(day)) {
-              this.basicsData.data.reservoirChange.byDate.get(day).push(datum);
+            if (reservoirChange.byDate.has(day)) {
+              reservoirChange.byDate.get(day).push(datum);
             } else {
-              this.basicsData.data.reservoirChange.byDate.set(day, [datum]);
+              reservoirChange.byDate.set(day, [datum]);
             }
           }
           break;
@@ -904,41 +919,86 @@ class DiabeloopData {
         }
         break;
       default:
-        if (basicsTypes.includes(datum.type)) {
-          const group = _.get(this.basicsData.data, [datum.type, 'data'], []);
-          group.push(datum);
-          _.set(this.basicsData.data, [datum.type, 'data'], group);
+        {
+          /** @type {{data: any[], byDate: Map<string, any[]>}} */
+          let group = _.get(this.basicsData.data, datum.type, null);
+          if (group === null) {
+            group = {data: [], byDate: new Map()};
+            _.set(this.basicsData.data, datum.type, group);
+          }
+          if (!Array.isArray(group.data)) {
+            group.data = [];
+          }
+          if (!(group.byDate instanceof Map)) {
+            group.byDate = new Map();
+          }
+          group.data.push(datum);
+          const day = moment.tz(datum.normalTime, datum.timezone).format('YYYY-MM-DD');
+          if (group.byDate.has(day)) {
+            group.byDate.get(day).push(datum);
+          } else {
+            group.byDate.set(day, [datum]);
+          }
         }
         break;
       }
     }
 
     // Statistics
-    if (this.basicsData.data.bolus.byDate !== null) {
-      const { bolus } = this.basicsData.data;
+    for (const property in this.basicsData.data) {
+      /** @type {{data: any[], byDate: Map<string, any[]>, avgPerDay: number, [x: string]: any}} */
+      const group = this.basicsData.data[property];
+      const nData = group.data.length;
       let nbDays = 0;
       let total = 0;
-      let nManual = 0; // Wizard
-      let nAutomated = 0;
-      let nInterrupted = 0;
 
-      bolus.byDate.forEach((value) => {
-        this.sortByNormalTime(value);
-        nbDays += 1;
-        total += value.length;
-      });
-      bolus.avgPerDay = Math.round(total / nbDays);
-      if (Math.abs(total - bolus.data.length) > 0) {
-        this.log.warn(`Bolus expected total ${total} having ${bolus.data.length}`);
+      if (group.byDate instanceof Map) {
+        group.byDate.forEach((value) => {
+          this.sortByNormalTime(value);
+          nbDays += 1;
+          total += value.length;
+        });
+        if (Math.abs(total - nData) > 0) {
+          this.log.warn(`${property} expected total ${total} having ${nData}`);
+        }
       }
-      for (let i = 0; i < bolus.data.length; i++) {
-        const b = bolus.data[i];
-        if (b.manual) nManual += 1; else nAutomated += 1;
-        if (b.interrupted) nInterrupted += 1;
+
+      // Average entries by day, should be 0 if nbDays is 0
+      group.avgPerDay = nbDays < 1 ? 0 : Math.round(total / nbDays);
+
+      switch (property) {
+      case 'bolus':
+        {
+          let nManual = 0; // Wizard
+          let nAutomated = 0;
+          let nInterrupted = 0;
+          for (let i = 0; i < nData; i++) {
+            const b = group.data[i];
+            if (b.manual) nManual += 1; else nAutomated += 1;
+            if (b.interrupted) nInterrupted += 1;
+          }
+          group.nManual = nManual;
+          group.nAutomated = nAutomated;
+          group.nInterrupted = nInterrupted;
+        }
+        break;
+      case 'basal':
+        {
+          let nAutomated = 0;
+          let nScheduled = 0;
+          for (let i = 0; i < nData; i++) {
+            const b = group.data[i];
+            if (b.deliveryType === 'automated') {
+              nAutomated += 1;
+            } else if (b.deliveryType === 'scheduled') {
+              nScheduled += 1;
+            }
+          }
+          group.nAutomated = nAutomated;
+          group.nScheduled = nScheduled;
+        }
+        break;
       }
-      bolus.nManual = nManual;
-      bolus.nAutomated = nAutomated;
-      bolus.nInterrupted = nInterrupted;
     }
 
     endTimer('initBasicsData');
