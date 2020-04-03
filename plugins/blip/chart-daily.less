@@ -1,0 +1,53 @@
+/*
+ * == BSD2 LICENSE ==
+ * Copyright (c) 2020, Diabeloop
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the associated License, which is identical to the BSD 2-Clause
+ * License as published by the Open Source Initiative at opensource.org.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the License for more details.
+ *
+ * You should have received a copy of the License along with this program; if
+ * not, you can obtain one from the Open Source Initiative (OSI) at
+ * https://opensource.org/licenses/BSD-2-Clause.
+ * == BSD2 LICENSE ==
+ */
+
+ @import '../../css/tideline-colors.less';
+
+#svgDailyView {
+  .cbg-very-low {
+    fill: @bg-very-low;
+  }
+  .cbg-low {
+    fill: @bg-low;
+    &.cbg-focus {
+      fill: @bg-low-focus;
+    }
+  }
+  .cbg-target {
+    fill: @bg-target;
+  }
+  .cbg-high {
+    fill: @bg-high;
+  }
+  .cbg-very-high {
+    fill: @bg-very-high;
+  }
+
+  #dailyScrollbar {
+    #dailyScrollbarBackground {
+      stroke: #F2F4F6;
+      stroke-linecap: round;
+      stroke-width: 20px;
+    }
+    #dailyScrollbarSlider {
+      stroke: #989897;
+      stroke-linecap: round;
+      stroke-width: 16px;
+    }
+  }
+}

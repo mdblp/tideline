@@ -69,7 +69,7 @@ module.exports = {
       veryLow: 54,
       targetLower: 70,
       targetUpper: 180,
-      veryHigh:250,
+      veryHigh: 250,
     },
     [MMOLL_UNITS]: {
       veryLow: 3.0,

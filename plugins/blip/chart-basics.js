@@ -32,7 +32,11 @@ import siteChangeIcon from './basics/components/sitechange/sitechange_diabeloop.
 
 const t = i18next.t.bind(i18next);
 
-/** @param {{numElements: number, icon?: any}} props */
+/**
+ * Draw an SVG icon with up to 17 circles representing the
+ * number of data for a day.
+ * @param {{numElements: number, icon?: any}} props
+ */
 function SVGCalendarIcon(props) {
   const { icon, numElements } = props;
   let iconContent = null;
@@ -429,10 +433,10 @@ class ChartBasics extends React.Component {
 
 ChartBasics.propTypes = {
   diabeloopData: DblgPropTypes.isRequired,
-  patient: PropTypes.object.isRequired,
+  // patient: PropTypes.object.isRequired,
   onSelectDay: PropTypes.func.isRequired,
-  chartPrefs: PropTypes.object.isRequired,
-  updateBasicsData: PropTypes.func.isRequired,
+  // chartPrefs: PropTypes.object.isRequired,
+  // updateBasicsData: PropTypes.func.isRequired,
   containerId: PropTypes.string.isRequired,
   className: PropTypes.string.isRequired,
   trackMetric: PropTypes.func,

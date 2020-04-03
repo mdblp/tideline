@@ -17,6 +17,11 @@
 
 /* global __DEV__ */
 
+/**
+ * @typedef {{ id: string, normalTime: string, timezone: string, [x: string]: any }} CommonDatum
+ * @typedef {{ id: string, value: number, timestamps: number, timezone: string}} CBGDailyDatum
+ */
+
 // Global imports
 import _ from 'lodash';
 import moment from 'moment-timezone';
@@ -38,6 +43,7 @@ import {
 // import BasalUtil from './data/basalutil';
 // import BolusUtil from './data/bolusutil';
 // import BGUtil from './data/bgutil';
+
 
 const defaultOptions = {
   timePrefs: {
@@ -96,10 +102,21 @@ class DiabeloopData {
     }
 
     this.timePrefs = defaultOptions.timePrefs;
+    /** @type{defaultOptions} */
     this.opts = defaultOptions;
     if (typeof options === 'object' && options !== null) {
       this.opts = options;
       _.defaultsDeep(this.opts, defaultOptions);
+    }
+
+    if (this.opts.bgUnits !== defaultOptions.bgUnits) {
+      this.opts.bgClasses = {
+        'very-low': { boundary: DEFAULT_BG_BOUNDS[this.opts.bgUnits].veryLow },
+        low: { boundary: DEFAULT_BG_BOUNDS[this.opts.bgUnits].targetLower },
+        target: { boundary: DEFAULT_BG_BOUNDS[this.opts.bgUnits].targetUpper },
+        high: { boundary: DEFAULT_BG_BOUNDS[this.opts.bgUnits].veryHigh },
+        'very-high': { boundary: BG_CLAMP_THRESHOLD[this.opts.bgUnits] },
+      };
     }
 
     if (!Array.isArray(data)) {
@@ -121,7 +138,7 @@ class DiabeloopData {
   reset() {
     this.timePrefs = this.opts.timePrefs;
     this.endpoints = null;
-    /** Almost all data from platform-data */
+    /** @type {CommonDatum[]} Almost all data from platform-data */
     this.data = [];
     /** Contains array with this.data grouped by type */
     this.grouped = {
@@ -131,12 +148,12 @@ class DiabeloopData {
       cbg: [],
       smbg: [],
     };
-    /** Almost like this.data, but with fewer elements */
+    /** @type {CommonDatum[]} Almost like this.data, but with fewer elements */
     this.diabetesData = [];
     /** Diabeloop device parameters grouped for displaying in the daily view */
     this.deviceParameters = [];
-    this.bgClasses = this.opts.bgClasses;
     this.bgUnits = this.opts.bgUnits;
+    this.bgClasses = this.opts.bgClasses;
     this.basicsData = {
       /** Timezone of the latest data */
       timezone: 'UTC',
@@ -147,8 +164,9 @@ class DiabeloopData {
       /** Almost the same as this.grouped */
       data: {
         reservoirChange: {
+          /** @type CommonDatum[] */
           data: [],
-          /** @type{Map<string, Array<object>>} 'YYYY-MM-DD' -> [{deviceEvent datum}] */
+          /** @type{Map<string, Array<CommonDatum>>} 'YYYY-MM-DD' -> [{deviceEvent datum}] */
           byDate: new Map(),
         },
         cannulaPrime: { data: [] },
@@ -175,6 +193,12 @@ class DiabeloopData {
         wizard: { data: [] },
       },
     };
+    this.dailyData = {
+      cbgMin: Number.POSITIVE_INFINITY,
+      cbgMax: Number.NEGATIVE_INFINITY,
+      /** @type {CBGDailyDatum[]} */
+      cbg: [],
+    };
     // Utilities:
     this.basalUtil = null;
     this.bolusUtil = null;
@@ -187,6 +211,7 @@ class DiabeloopData {
     this.smbgByDayOfWeek = null;
     this.cbgByDate = null;
     this.cbgByDayOfWeek = null;
+    this.cbgByTimestamps = null;
   }
 
   addData(newData = []) {
@@ -217,6 +242,7 @@ class DiabeloopData {
     const nData = this.rawData.length;
     let timezone = null;
     for (let i = 0; i < nData; i++) {
+      /** @type {CommonDatum} */
       const datum = this.rawData[i];
       const ok = this.normalizeDatum(datum);
 
@@ -259,6 +285,24 @@ class DiabeloopData {
 
         if (type !== 'upload') {
           this.data.push(datum);
+        }
+        if (type === 'cbg') {
+          /** @type {number} */
+          const value = datum.value;
+          const timestamps = Date.parse(datum.normalTime);
+          this.dailyData.cbg.push({
+            id: datum.id,
+            value,
+            timestamps,
+            timezone: datum.timezone,
+          });
+
+          if (value < this.dailyData.cbgMin) {
+            this.dailyData.cbgMin = value;
+          }
+          if (value > this.dailyData.cbgMax) {
+            this.dailyData.cbgMax = value;
+          }
         }
 
         // Timezone change:
@@ -315,6 +359,7 @@ class DiabeloopData {
       this.sortByNormalTime(this.grouped[group]);
     }
     this.endpoints = [firstEndPoint, lastEndPoint];
+    this.dailyData.cbg.sort((a, b) => a.timestamps - b.timestamps);
     endTimer('addDataArrays');
 
     this.log.info(`Number of data: ${this.data.length}`);
@@ -591,6 +636,7 @@ class DiabeloopData {
     this.smbgByDayOfWeek = this.createCrossFilter('smbgByDayOfWeek');
     this.cbgByDate = this.createCrossFilter('cbgByDatetime');
     this.cbgByDayOfWeek = this.createCrossFilter('cbgByDayOfWeek');
+    this.cbgByTimestamps = crossfilter(this.dailyData.cbg).dimension((d) => d.timestamps);
     endTimer('initCrossFilters');
   }
 
