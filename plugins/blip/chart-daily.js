@@ -31,7 +31,7 @@ import './chart-daily.less';
 const WIDGETS_GAP = 20;
 const SCROLL_ELEM_NONE = 0;
 const SCROLL_ELEM_SLIDER = 1;
-// const SCROLL_ELEM_VIEW = 2;
+const SCROLL_ELEM_SLIDER_OUT = 2;
 
 /**
  * Daily view rendered as an SVG image.
@@ -153,15 +153,18 @@ class ChartDaily extends React.Component {
 
     const svgDots = [];
     let prevX = -4;
+    let prevY = svgHeight;
     // let leftOver = 0;
     for (let i = 0; i < cbgData.length; i++) {
       const d = cbgData[i];
       const posX = cbgPosX(d);
-      if (posX - prevX > 4) {
+      const posY = cbgPosY(d);
+      if (posX - prevX > 6 || Math.abs(prevY - posY) > 6) {
         svgDots.push(
-          <circle id={`cbg-${d.id}`} cx={posX} cy={cbgPosY(d)} r="4" key={d.id} className={cbgColor(d)} />
+          <circle id={`cbg-${d.id}`} cx={posX} cy={posY} r="3" key={d.id} className={cbgColor(d)} />
         );
         prevX = posX;
+        prevY = posY;
       // } else {
       //   leftOver++;
       }
@@ -216,7 +219,7 @@ class ChartDaily extends React.Component {
   }
 
   /**
-   * Throttle code for moving the current timestamp.
+   * Throttled code for moving the current timestamp.
    * @param {number} timestamps
    */
   scrollTo(timestamps) {
@@ -232,19 +235,20 @@ class ChartDaily extends React.Component {
     this.setState({ timestamps });
   }
 
-  onMouseDownSlider() {
-    // this.log.debug('onClickSlider', e.currentTarget.id);
-    this.setState({ scrollElem: SCROLL_ELEM_SLIDER });
+  /** @param {React.MouseEvent} e click event */
+  onMouseDownSlider(e) {
+    if (e.buttons === 1) {
+      this.setState({ scrollElem: SCROLL_ELEM_SLIDER });
+    }
   }
 
   /** @param {React.MouseEvent} e click event */
   onMouseUp(e) {
     const { scrollElem } = this.state;
-    e.preventDefault();
-    e.stopPropagation();
     if (scrollElem) {
+      e.preventDefault();
+      e.stopPropagation();
       this.setState({ scrollElem: SCROLL_ELEM_NONE });
-      this.log.debug('onMouseUp', e.currentTarget.id, e.target);
     }
   }
 
@@ -252,20 +256,45 @@ class ChartDaily extends React.Component {
   onMouseMove(e) {
     const { scrollElem } = this.state;
     if (scrollElem) {
-      e.preventDefault();
-      e.stopPropagation();
-      const timestamps = this.getTimestampFromMouseEvent(e);
-      this.scrollTo(timestamps);
+      if (e.buttons !== 1) {
+        this.setState({ scrollElem: SCROLL_ELEM_NONE });
+      } else {
+        e.preventDefault();
+        e.stopPropagation();
+        const timestamps = this.getTimestampFromMouseEvent(e);
+        this.scrollTo(timestamps);
+      }
     }
   }
 
   /** @param {React.MouseEvent} e click event */
   onMouseLeave(e) {
     const { scrollElem } = this.state;
-    if (scrollElem) {
+    let newStatus = SCROLL_ELEM_NONE;
+
+    switch (scrollElem) {
+    case SCROLL_ELEM_SLIDER:
+      newStatus = SCROLL_ELEM_SLIDER_OUT;
+      break;
+    }
+
+    if (newStatus) {
       e.preventDefault();
-      this.log.debug('onMouseLeave');
-      this.setState({ scrollElem: SCROLL_ELEM_NONE });
+      this.setState({ scrollElem: newStatus });
+    }
+  }
+
+  onMouseEnter(e) {
+    const { scrollElem } = this.state;
+    if (scrollElem) {
+      let newStatus = SCROLL_ELEM_NONE;
+      switch (scrollElem) {
+      case SCROLL_ELEM_SLIDER_OUT:
+        newStatus = SCROLL_ELEM_SLIDER;
+        break;
+      }
+      e.preventDefault();
+      this.setState({ scrollElem: newStatus });
     }
   }
 }
