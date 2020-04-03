@@ -19,7 +19,8 @@
 
 /**
  * @typedef {{ id: string, normalTime: string, timezone: string, [x: string]: any }} CommonDatum
- * @typedef {{ id: string, value: number, timestamps: number, timezone: string}} CBGDailyDatum
+ * @typedef {{ id: string, timestamps: number, timezone: string, value: number}} DailyDatum
+ * @typedef {{ id: string, timestamps: number, timezone: string, value: number, expectedValue: number}} BolusDailyDatum
  */
 
 // Global imports
@@ -194,10 +195,22 @@ class DiabeloopData {
       },
     };
     this.dailyData = {
-      cbgMin: Number.POSITIVE_INFINITY,
+      /** Used to scale the values in the daily chart */
       cbgMax: Number.NEGATIVE_INFINITY,
-      /** @type {CBGDailyDatum[]} */
+      /** Used to scale the values in the daily chart */
+      bolusMax: Number.NEGATIVE_INFINITY,
+      /** @type {DailyDatum[]} Blood glucose */
       cbg: [],
+      cbgByTimestamps: null,
+      /** @type {BolusDailyDatum[]} */
+      bolus: [],
+      bolusByTimestamps: null,
+      /** @type {DailyDatum[]} Carbohydrates */
+      wizard: [],
+      wizardByTimestamps: null,
+      /** @type {DailyDatum[]} Rescue carbs */
+      food: [],
+      foodByTimestamps: null,
     };
     // Utilities:
     this.basalUtil = null;
@@ -211,7 +224,6 @@ class DiabeloopData {
     this.smbgByDayOfWeek = null;
     this.cbgByDate = null;
     this.cbgByDayOfWeek = null;
-    this.cbgByTimestamps = null;
   }
 
   addData(newData = []) {
@@ -286,24 +298,7 @@ class DiabeloopData {
         if (type !== 'upload') {
           this.data.push(datum);
         }
-        if (type === 'cbg') {
-          /** @type {number} */
-          const value = datum.value;
-          const timestamps = Date.parse(datum.normalTime);
-          this.dailyData.cbg.push({
-            id: datum.id,
-            value,
-            timestamps,
-            timezone: datum.timezone,
-          });
-
-          if (value < this.dailyData.cbgMin) {
-            this.dailyData.cbgMin = value;
-          }
-          if (value > this.dailyData.cbgMax) {
-            this.dailyData.cbgMax = value;
-          }
-        }
+        this.updateDailyData(datum);
 
         // Timezone change:
         if (timezone === null) {
@@ -354,12 +349,12 @@ class DiabeloopData {
     // Sort the data arrays
     this.sortByNormalTime(this.data);
     this.sortByNormalTime(this.diabetesData);
+    this.sortByTimestamps(this.dailyData.cbg);
     // eslint-disable-next-line guard-for-in, no-restricted-syntax
     for (const group in this.grouped) {
       this.sortByNormalTime(this.grouped[group]);
     }
     this.endpoints = [firstEndPoint, lastEndPoint];
-    this.dailyData.cbg.sort((a, b) => a.timestamps - b.timestamps);
     endTimer('addDataArrays');
 
     this.log.info(`Number of data: ${this.data.length}`);
@@ -435,6 +430,22 @@ class DiabeloopData {
       });
     } else {
       this.log.error('sortByNormalTime: Invalid parameter', array);
+    }
+  }
+
+  /**
+   * Sort the array by timestamps.
+   * @param {Array} array The array to sort.
+   */
+  sortByTimestamps(array) {
+    if (Array.isArray(array)) {
+      array.sort((a, b) => {
+        if (a.timestamps < b.timestamps) return -1;
+        if (a.timestamps > b.timestamps) return 1;
+        return 0;
+      });
+    } else {
+      this.log.error('sortByTimestamps: Invalid parameter', array);
     }
   }
 
@@ -562,6 +573,76 @@ class DiabeloopData {
   }
 
   /**
+   * @param {CommonDatum} d The datum
+   */
+  updateDailyData(d) {
+    const { type } = d;
+    const { id, timezone } = d;
+    const timestamps = Date.parse(d.normalTime);
+
+    switch (type) {
+    case 'cbg':
+      {
+        /** @type {number} */
+        const value = d.value;
+        this.dailyData.cbg.push({
+          id,
+          timestamps,
+          timezone,
+          value,
+        });
+        if (value > this.dailyData.cbgMax) {
+          this.dailyData.cbgMax = value;
+        }
+      }
+      break;
+    case 'bolus':
+      {
+        const value = d.normal;
+        const expectedValue = d.expectedNormal;
+        const maxValue = Math.max(value, expectedValue);
+        this.dailyData.bolus.push({
+          id,
+          timestamps,
+          timezone,
+          value,
+          expectedValue
+        });
+        if (maxValue > this.dailyData.bolusMax) {
+          this.dailyData.bolusMax = maxValue;
+        }
+      }
+      break;
+    case 'wizard':
+      {
+        const value = d.carbInput;
+        this.dailyData.wizard.push({
+          id,
+          timestamps,
+          timezone,
+          value,
+        });
+      }
+      break;
+    case 'food':
+      {
+        if (d.meal === 'rescuecarbs') {
+          const value = d.nutrition.carbohydrate.net;
+          this.dailyData.food.push({
+            id,
+            timestamps,
+            timezone,
+            value,
+          });
+        } else {
+          this.log.error('Missing food meal type', d.meal, d);
+        }
+      }
+      break;
+    }
+  }
+
+  /**
    * Used to display the device parameters (type: 'deviceEvent', subType: 'deviceParameter')
    * in the daily view.
    */
@@ -636,7 +717,10 @@ class DiabeloopData {
     this.smbgByDayOfWeek = this.createCrossFilter('smbgByDayOfWeek');
     this.cbgByDate = this.createCrossFilter('cbgByDatetime');
     this.cbgByDayOfWeek = this.createCrossFilter('cbgByDayOfWeek');
-    this.cbgByTimestamps = crossfilter(this.dailyData.cbg).dimension((d) => d.timestamps);
+    this.dailyData.cbgByTimestamps = crossfilter(this.dailyData.cbg).dimension((d) => d.timestamps);
+    this.dailyData.bolusByTimestamps = crossfilter(this.dailyData.bolus).dimension((d) => d.timestamps);
+    this.dailyData.wizardByTimestamps = crossfilter(this.dailyData.wizard).dimension((d) => d.timestamps);
+    this.dailyData.foodByTimestamps = crossfilter(this.dailyData.food).dimension((d) => d.timestamps);
     endTimer('initCrossFilters');
   }
 

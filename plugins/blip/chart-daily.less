@@ -19,25 +19,49 @@
  @import '../../css/tideline-colors.less';
 
 #svgDailyView {
-  .cbg-very-low {
+  // CBG chart
+  circle.cbg-very-low {
     fill: @bg-very-low;
   }
-  .cbg-low {
+  circle.cbg-low {
     fill: @bg-low;
-    &.cbg-focus {
+    &circle.cbg-focus {
       fill: @bg-low-focus;
     }
   }
-  .cbg-target {
+  circle.cbg-target {
     fill: @bg-target;
   }
-  .cbg-high {
+  circle.cbg-high {
     fill: @bg-high;
   }
-  .cbg-very-high {
+  circle.cbg-very-high {
     fill: @bg-very-high;
   }
 
+  // Bolus chart
+  line.bolus-delivered {
+    stroke: @bolus;
+    stroke-width: 8px;
+  }
+  line.bolus-expected {
+    stroke: @suspended;
+    stroke-width: 8px;
+  }
+  circle.food-circle {
+    fill: @carbs;
+  }
+  circle.wizard-circle {
+    fill: @rescuecarbs;
+  }
+  text.food-value, text.wizard-value {
+    fill: @text;
+    font-size: 12px;
+    dominant-baseline: central;
+    text-anchor: middle;
+  }
+
+  // Scrollbar
   #dailyScrollbar {
     #dailyScrollbarBackground {
       stroke: #F2F4F6;

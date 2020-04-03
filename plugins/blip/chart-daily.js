@@ -87,14 +87,20 @@ class ChartDaily extends React.Component {
   }
 
   renderSVG() {
-    const { svgWidth } = this.state;
+    const { svgWidth, timestamps } = this.state;
 
     if (svgWidth === 0) {
       return null;
     }
 
+    const firstTimestamp = timestamps - Constants.MS_IN_DAY / 2; // -12h
+    const lastTimestamp = firstTimestamp + Constants.MS_IN_DAY; //  +24h
+    const scaleX = svgWidth / (lastTimestamp - firstTimestamp);
+
     this.currentHeight = 0;
-    const cbg = this.renderCBG();
+    const cbg = this.renderCBG(firstTimestamp, lastTimestamp, scaleX);
+    this.currentHeight += WIDGETS_GAP; // margin
+    const bolus = this.renderBolus(firstTimestamp, lastTimestamp, scaleX);
     this.currentHeight += WIDGETS_GAP; // margin
     const scroll = this.renderScrollBar();
     this.currentHeight += WIDGETS_GAP; // margin
@@ -108,14 +114,21 @@ class ChartDaily extends React.Component {
         onMouseUp={this.onMouseUp}
         onMouseMove={this.onMouseMove}>
         {cbg}
+        {bolus}
         {scroll}
       </svg>
     );
   }
 
-  renderCBG() {
+  /**
+   * Render CBG, SMBG
+   * @param {number} firstTimestamp
+   * @param {number} lastTimestamp
+   * @param {number} scaleX
+   */
+  renderCBG(firstTimestamp, lastTimestamp, scaleX) {
     const svgHeight = 175;
-    const { svgWidth, timestamps } = this.state;
+    const { svgWidth } = this.state;
     const { diabeloopData } = this.props;
     const bgClasses = diabeloopData.bgClasses;
 
@@ -125,17 +138,14 @@ class ChartDaily extends React.Component {
     const high = /** @type {number} */ (bgClasses.high.boundary);
     const veryHigh = /** @type {number} */ (bgClasses['very-high'].boundary);
 
-    const firstTimestamp = timestamps - Constants.MS_IN_DAY / 2; // -12h
-    const lastTimestamp = firstTimestamp + Constants.MS_IN_DAY; //  +24h
-    const scaleX = svgWidth / (lastTimestamp - firstTimestamp);
     const scaleY = svgHeight / (diabeloopData.dailyData.cbgMax * 1.05); // Add 5% of margin
 
-    const cbgFilter = diabeloopData.cbgByTimestamps.filterAll().filterRange([firstTimestamp, lastTimestamp]);
+    const cbgFilter = diabeloopData.dailyData.cbgByTimestamps.filterAll().filterRange([firstTimestamp, lastTimestamp]);
     const cbgData = cbgFilter.bottom(Number.POSITIVE_INFINITY);
 
-    const cbgPosX = (/** @type {{timestamps: number}} */ d) => (d.timestamps - firstTimestamp) * scaleX;
-    const cbgPosY = (/** @type {{value: number}} */ d) => (svgHeight - (d.value * scaleY)); // 0 = top of the drawing, so inverse the coordinate
-    const cbgColor = ( /** @type {{value: number}} */ d) => {
+    const datumPosX = (/** @type {{timestamps: number}} */ d) => (d.timestamps - firstTimestamp) * scaleX;
+    const datumPosY = (/** @type {{value: number}} */ d) => (svgHeight - (d.value * scaleY)); // 0 = top of the drawing, so inverse the coordinate
+    const datumColor = ( /** @type {{value: number}} */ d) => {
       if (d.value < veryLow) {
         return 'cbg-very-low';
       }
@@ -154,36 +164,111 @@ class ChartDaily extends React.Component {
     const svgDots = [];
     let prevX = -4;
     let prevY = svgHeight;
-    // let leftOver = 0;
     for (let i = 0; i < cbgData.length; i++) {
       const d = cbgData[i];
-      const posX = cbgPosX(d);
-      const posY = cbgPosY(d);
+      const posX = datumPosX(d);
+      const posY = datumPosY(d);
+      // Avoid display too much datum which are too closed:
       if (posX - prevX > 6 || Math.abs(prevY - posY) > 6) {
         svgDots.push(
-          <circle id={`cbg-${d.id}`} cx={posX} cy={posY} r="3" key={d.id} className={cbgColor(d)} />
+          <circle id={d.id} cx={posX} cy={posY} r="3" key={d.id} className={datumColor(d)} />
         );
         prevX = posX;
         prevY = posY;
-      // } else {
-      //   leftOver++;
       }
     }
 
-    // this.log.info('number of cbg not rendered:', leftOver);
+    // TODO return this value
     this.currentHeight += svgHeight;
 
     return (
       <g id="dailyCbgData" transform={`translate(0, ${(this.currentHeight - svgHeight)})`}>
         <rect fill="#ddd" width={svgWidth} height={svgHeight} />
-        <line id="cbg-bound-very-low" stroke="#f0f0f0" x1="0" x2={svgWidth} y1={cbgPosY({value: veryLow})} y2={cbgPosY({value: veryLow})} />
-        <line id="cbg-bound-low" stroke="#f0f0f0" x1="0" x2={svgWidth} y1={cbgPosY({value: low})} y2={cbgPosY({value: low})} />
-        <line id="cbg-bound-target" stroke="#f0f0f0" x1="0" x2={svgWidth} y1={cbgPosY({value: target})} y2={cbgPosY({value: target})} />
-        <line id="cbg-bound-high" stroke="#f0f0f0" x1="0" x2={svgWidth} y1={cbgPosY({value: high})} y2={cbgPosY({value: high})} />
-        <line id="cbg-bound-very-high" stroke="#f0f0f0" x1="0" x2={svgWidth} y1={cbgPosY({value: veryHigh})} y2={cbgPosY({value: veryHigh})} />
+        <line id="cbg-bound-very-low" stroke="#f0f0f0" x1="0" x2={svgWidth} y1={datumPosY({value: veryLow})} y2={datumPosY({value: veryLow})} />
+        <line id="cbg-bound-low" stroke="#f0f0f0" x1="0" x2={svgWidth} y1={datumPosY({value: low})} y2={datumPosY({value: low})} />
+        <line id="cbg-bound-target" stroke="#f0f0f0" x1="0" x2={svgWidth} y1={datumPosY({value: target})} y2={datumPosY({value: target})} />
+        <line id="cbg-bound-high" stroke="#f0f0f0" x1="0" x2={svgWidth} y1={datumPosY({value: high})} y2={datumPosY({value: high})} />
+        <line id="cbg-bound-very-high" stroke="#f0f0f0" x1="0" x2={svgWidth} y1={datumPosY({value: veryHigh})} y2={datumPosY({value: veryHigh})} />
         {svgDots}
       </g>
     );
+  }
+  /**
+   * Render CBG, SMBG
+   * @param {number} firstTimestamp
+   * @param {number} lastTimestamp
+   * @param {number} scaleX
+   */
+  renderBolus(firstTimestamp, lastTimestamp, scaleX) {
+    const svgHeight = 110;
+    const { svgWidth } = this.state;
+    const { diabeloopData } = this.props;
+    const { bolusByTimestamps, foodByTimestamps, wizardByTimestamps } = diabeloopData.dailyData;
+    const bolusBars = [];
+    const foodInfos = []; // meal / Rescue carbs
+    const wizardInfos = []; // carbInput
+
+    const scaleY = (svgHeight - 28) / (diabeloopData.dailyData.bolusMax * 1.05); // Add 5% of margin + 28 for food/wizard
+    const bolusFilter = bolusByTimestamps.filterAll().filterRange([firstTimestamp, lastTimestamp]);
+    const bolusData = bolusFilter.bottom(Number.POSITIVE_INFINITY);
+    const foodFilter = foodByTimestamps.filterAll().filterRange([firstTimestamp, lastTimestamp]);
+    const foodData = foodFilter.bottom(Number.POSITIVE_INFINITY);
+    const wizardFilter = wizardByTimestamps.filterAll().filterRange([firstTimestamp, lastTimestamp]);
+    const wizardData = wizardFilter.bottom(Number.POSITIVE_INFINITY);
+
+    const datumPosX = (/** @type {{timestamps: number}} */ d) => (d.timestamps - firstTimestamp) * scaleX;
+    // 0 = top of the drawing, so inverse the coordinate, 28 for food/wizard circles values
+    const datumPosY = (/** @type {{value: number}} */ d) => (svgHeight - 28 - (d.value * scaleY));
+
+    for (let i = 0; i < bolusData.length; i++) {
+      const d = bolusData[i];
+      const posX = datumPosX(d);
+      const posY = datumPosY(d);
+      bolusBars.push(
+        <line id={`bolus-d-${d.id}`} key={`bolus-d-${d.id}`} x1={posX} x2={posX} y1={svgHeight} y2={posY} className="bolus-delivered" />
+      );
+      if (d.expectedValue > d.value) {
+        const expPosY = datumPosY({value: d.expectedValue});
+        bolusBars.push(
+          <line id={`bolus-e-${d.id}`} key={`bolus-e-${d.id}`} x1={posX} x2={posX} y1={posY} y2={expPosY} className="bolus-expected" />
+        );
+      }
+    }
+
+    for (let i = 0; i < foodData.length; i++) {
+      const d = foodData[i];
+      const posX = datumPosX(d);
+      foodInfos.push(
+        <g id={d.id} key={d.id} transform={`translate(${posX}, 0)`}>
+          <circle cx="0" cy={14} r={14} className="food-circle" />
+          <text x="0" y={14} className="food-value">{d.value}</text>
+        </g>
+      );
+    }
+
+    for (let i = 0; i < wizardData.length; i++) {
+      const d = wizardData[i];
+      const posX = datumPosX(d);
+      wizardInfos.push(
+        <g id={d.id} key={d.id} transform={`translate(${posX}, 0)`}>
+          <circle cx="0" cy={14} r={14} className="wizard-circle" />
+          <text x="0" y={14} className="wizard-value">{d.value}</text>
+        </g>
+      );
+    }
+
+    // TODO return this value
+    this.currentHeight += svgHeight;
+
+    return (
+      <g id="dailyBolusData" transform={`translate(0, ${(this.currentHeight - svgHeight)})`}>
+        <rect fill="#ddd" width={svgWidth} height={svgHeight} />
+        {bolusBars}
+        {foodInfos}
+        {wizardInfos}
+      </g>
+    );
+
   }
 
   renderScrollBar() {
