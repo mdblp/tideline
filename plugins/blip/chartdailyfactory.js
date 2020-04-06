@@ -372,7 +372,8 @@ function chartDailyFactory(el, options) {
       yScale: scaleBasal,
       emitter: emitter,
       data: tidelineData.grouped.basal,
-      timezoneAware: chart.options.timePrefs.timezoneAware
+      timezoneAware: chart.options.timePrefs.timezoneAware,
+      timezoneName: chart.options.timePrefs.timezoneName
     }), true, true);
 
     // add device suspend data to basal pool

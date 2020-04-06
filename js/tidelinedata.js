@@ -21,6 +21,7 @@
 var _ = require('lodash');
 var crossfilter = require('crossfilter2');
 var d3 = require('d3');
+var moment = require('moment-timezone');
 
 var validate = require('./validation/validate');
 
@@ -82,6 +83,18 @@ function TidelineData(data, opts) {
   var that = this;
 
   var MS_IN_MIN = 60000, MS_IN_DAY = 864e5;
+
+  function genRandomId() {
+    const array = new Uint8Array(16);
+    window.crypto.getRandomValues(array);
+    const hexID = new Array(16);
+    for (let i = 0; i < array.length; i++) {
+      const b = array[i];
+      const hex = (b + 0x100).toString(16).substr(1);
+      hexID[i] = hex;
+    }
+    return hexID.join('');
+  }
 
   function checkRequired() {
     startTimer('checkRequired');
@@ -167,7 +180,7 @@ function TidelineData(data, opts) {
   this.setDeviceParameters = function (data = []){
     var parameters = _.filter( data,  {type: 'deviceEvent', subType: 'deviceParameter'});
     var sortedParameters =_.orderBy(parameters,['normaltime'], ['desc']);
-  
+
     this.deviceParameters = [];
     if (sortedParameters.length > 0) {
       var first = sortedParameters[0];
@@ -195,6 +208,62 @@ function TidelineData(data, opts) {
       this.deviceParameters.push(group);
     }
   };
+
+  this.checkTimezone = function() {
+    const uploadIdFilter = crossfilter(this.grouped.upload).dimension((d) => d.id);
+    const nData = this.data.length;
+    let nUpdate = 0;
+    let timezone = null;
+    for (let i = 0; i < nData; i++) {
+      const datum = this.data[i];
+      // We need the source info:
+      if (datum.type !== 'upload' && typeof datum.source !== 'string') {
+        const uploadDatum = uploadIdFilter.filterExact(datum.uploadId).top(1);
+        if (uploadDatum.length > 0) {
+          datum.source = uploadDatum[0].source;
+          nUpdate++;
+        } else {
+          // Use another upload
+          datum.source = this.grouped.upload[0].source;
+          nUpdate++;
+        }
+      }
+      // deviceEvent / timeChange datum:
+      if (typeof datum.timezone !== 'string') {
+        continue;
+      }
+      if (timezone === null) {
+        timezone = datum.timezone;
+      } else if (timezone !== 'UTC' && datum.timezone !== 'UTC' && timezone !== datum.timezone) {
+        // Create timezone change datum
+        const prevTime = moment.tz(datum.normalTime, timezone).format('YYYY-MM-DDTHH:mm:ss');
+        const newTime = moment.tz(datum.normalTime, datum.timezone).format('YYYY-MM-DDTHH:mm:ss');
+        const datumTimezoneChange = {
+          id: genRandomId(),
+          time: datum.normalTime,
+          normalTime: datum.normalTime,
+          timezone: datum.timezone,
+          timezoneOffset: datum.timezoneOffset,
+          type: 'deviceEvent',
+          subType: 'timeChange',
+          source: 'Diabeloop',
+          from: {
+            time: prevTime,
+            timeZoneName: timezone,
+          },
+          to: {
+            time: newTime,
+            timeZoneName: datum.timezone,
+          },
+          method: 'guessed',
+        };
+        this.data.push(datumTimezoneChange);
+        log.info('Timezone change', datumTimezoneChange);
+        timezone = datum.timezone;
+      }
+    }
+    log.info('Number of datum source updated:', nUpdate);
+  }
 
   this.filterDataArray = function() {
     var dData = _.sortBy(this.diabetesData, 'normalTime');
@@ -230,6 +299,12 @@ function TidelineData(data, opts) {
     }));
     endTimer('Validation');
 
+    // Remove generated timezone event
+    this.data = _.reject(this.data, (d) => d.type === 'deviceEvent' && d.subType === 'timeChange' && d.method === 'guessed');
+    if (Array.isArray(this.grouped.deviceEvent)) {
+      this.grouped.deviceEvent = _.reject(this.grouped.deviceEvent, (d) => d.type === 'deviceEvent' && d.subType === 'timeChange' && d.method === 'guessed');
+    }
+
     // Add all valid new datums to the top of appropriate collections in descending order
     _.eachRight(_.sortBy(validatedData.valid, 'normalTime'), datum => {
       if (! _.isArray(this.grouped[datum.type])) {
@@ -258,6 +333,8 @@ function TidelineData(data, opts) {
 
     // get DeviceParameters
     this.setDeviceParameters(this.data);
+    // Timezone tooltips
+    this.checkTimezone();
 
     startTimer('setUtilities');
     this.setUtilities();
@@ -584,10 +661,10 @@ function TidelineData(data, opts) {
   this.setUtilities();
 
   if (data.length > 0 && !_.isEmpty(this.diabetesData)) {
-    var dData = this.diabetesData;
     this.data = _.sortBy(data, function(d) { return d.normalTime; });
     this.filterDataArray().generateFillData().adjustFillsForTwoWeekView();
     this.data = _.sortBy(this.data.concat(this.grouped.fill), function(d) { return d.normalTime; });
+    this.checkTimezone();
   }
   else {
     this.data = [];
