@@ -210,6 +210,9 @@ function TidelineData(data, opts) {
   };
 
   this.checkTimezone = function() {
+    if (!Array.isArray(this.grouped.upload)) {
+      return;
+    }
     const uploadIdFilter = crossfilter(this.grouped.upload).dimension((d) => d.id);
     const nData = this.data.length;
     let nUpdate = 0;
