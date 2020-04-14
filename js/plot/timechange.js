@@ -127,8 +127,16 @@ module.exports = function(pool, opts) {
     });
 
     const { foGroup } = tooltip;
-    const fromHTML = `<span class="fromto">${t('from')}</span> ${fromDate} - ${d.from.timeZoneName}`;
-    const toHTML = `<span class="fromto">${t('to')}</span> ${toDate} - ${d.to.timeZoneName}`;
+    let fromHTML = `<span class="fromto">${t('from')}</span> ${fromDate}`;
+    let toHTML = `<span class="fromto">${t('to')}</span> ${toDate}`;
+    let changeType;
+    if (d.from.timeZoneName !== d.to.timeZoneName) {
+      fromHTML = `${fromHTML} - ${d.from.timeZoneName}`;
+      toHTML = `${toHTML} - ${d.to.timeZoneName}`;
+      changeType = t('Timezone Change');
+    } else {
+      changeType = t('Time Change');
+    }
 
     foGroup.append('p')
       .append('span')
@@ -141,7 +149,7 @@ module.exports = function(pool, opts) {
     foGroup.append('p')
       .append('span')
       .attr('class', 'mainText')
-      .html(t('Timezone change'));
+      .html(changeType);
 
     const dims = tooltips.foreignObjDimensions(foGroup);
 

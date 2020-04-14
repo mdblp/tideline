@@ -37,6 +37,7 @@ module.exports = function(pool, opts) {
     pathStroke: 1.5,
     timezoneAware: false,
     timezoneName: 'UTC',
+    timezoneOffset: 0,
     tooltipPadding: 20,
   };
 
@@ -388,6 +389,8 @@ module.exports = function(pool, opts) {
       end = moment.tz(datum.normalEnd, datum.timezone).format(H_MM_A_FORMAT);
       if (datum.timezone !== opts.timezoneName) {
         end = `${end}<br />UTC${mBegin.format('Z')}`;
+      } else if (mBegin.utcOffset() !== opts.timezoneOffset) {
+        end = `${end}<br />UTC${mBegin.format('Z z')}`;
       }
     } else {
       begin = format.timestamp(datum.normalTime, datum.displayOffset);
