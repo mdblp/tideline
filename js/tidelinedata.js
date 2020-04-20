@@ -330,6 +330,8 @@ function TidelineData(data, opts) {
     endTimer('checkTimezone');
   }
 
+  this.filterTempBasal = (data) => _.reject(data, (d) => (d.type === 'basal' && d.deliveryType === 'temp'));
+
   this.filterDataArray = function() {
     var dData = _.sortBy(this.diabetesData, 'normalTime');
     this.data = _.reject(this.data, function(d) {
@@ -357,6 +359,7 @@ function TidelineData(data, opts) {
 
   this.addData = function(data = []) {
     // Validate all new data received
+    data = this.filterTempBasal(data);
     startTimer('Validation');
     const validatedData = validate.validateAll(data.map(datum => {
       this.watson(datum);
@@ -664,6 +667,8 @@ function TidelineData(data, opts) {
     }
     return d.warning != null;
   }
+
+  data = this.filterTempBasal(data);
 
   startTimer('Watson');
   // first thing to do is Watson the data

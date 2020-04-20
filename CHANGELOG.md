@@ -5,6 +5,10 @@ Library for Tidepool's timeline-style diabetes data visualization(s) used in Bli
 ### Fixed 
 - PT-1205 Add timezone info on tooltips when necessary
 
+## 1.9.2 - 2020-04-17
+### Fixed
+- PT-1231 Basics: Total basal events count does not give the correct total
+
 ## 1.9.1 - 2020-03-30
 ### Fixed
 - PT-1206 PT-1127 Have notes in first position on the daily screen, reverting PT-1100
