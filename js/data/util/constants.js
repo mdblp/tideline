@@ -39,8 +39,8 @@ const MMM_D_H_MM_A_FORMAT = 'MMM D, h:mm a';
 const DDDD_H_MM_A = 'dddd, h:mm a'; // Sunday, 3:25:50 pm
 
 /**
- * Used to regroup device parameters in one tooltip, when the changes are too closed.
- * This is to avoid supperpositions of the icons in the daily view.
+ * Used to regroup device parameters in one tooltip, when the changes are too close.
+ * This is to avoid superpositions of the icons in the daily view.
  * Format: Duration in milliseconds.
  */
 const DEVICE_PARAMS_OFFSET = 30 * 60 * 1000;
