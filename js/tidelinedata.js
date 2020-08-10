@@ -230,13 +230,11 @@ function TidelineData(data, opts) {
   };
 
   this.deduplicatePhysicalActivities = function (data = []) {
-    var physicalActivity = _.groupBy(_.filter( data,  {type: 'physicalActivity'}), 'eventId');
-    _.forEach(physicalActivity, function(value, key) {
-      physicalActivity[key] = _.orderBy(value, ['deviceTime'],['desc']);
+    var physicalActivity = _.groupBy(_.filter( data, {type: 'physicalActivity'}), 'eventId');
+    _.forEach(physicalActivity, (value, key) => {
+      physicalActivity[key] = _.orderBy(value, ['deviceTime'], ['desc']);
     })
-    this.physicalActivities = _.map(physicalActivity, function(value) {
-      return value[0];
-    });
+    this.physicalActivities = _.map(physicalActivity, (value) => value[0]);
   };
   
   this.checkTimezone = function() {
