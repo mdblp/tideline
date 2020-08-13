@@ -1,6 +1,10 @@
 # Yourloops data visualization for diabetes device data
 Library for Tidepool's timeline-style diabetes data visualization(s) used in Blip and was forked from tidepool/tideline.
 
+## unreleased 
+### Changed 
+- Deduplicate Zen and Confidential Events objects
+
 ## 1.12.0 2020-08-10
 ### Changed 
 - PT-1444 Deduplicate Physical Activity events containing the new EventId field

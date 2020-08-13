@@ -237,6 +237,18 @@ function TidelineData(data, opts) {
     this.physicalActivities = _.map(physicalActivity, (value) => value[0]);
   };
   
+  this.setEvents = function (data = [], filter = {}, order = ['deviceTime']) {
+    const sourceEvents = _.groupBy(_.filter( data, filter ), 'eventId');
+    const events = {};
+    _.forEach(sourceEvents, function(value, key) {
+      events[key] = _.orderBy(value, order,['desc']);
+    })
+    const res = _.map(events, function(value) {
+      return value[0];
+    });
+    return res;
+  };
+
   this.checkTimezone = function() {
     if (!Array.isArray(this.grouped.upload)) {
       return;
@@ -427,6 +439,18 @@ function TidelineData(data, opts) {
 
     // get DeviceParameters
     this.setDeviceParameters(this.data);
+    this.zenEvents = this.setEvents(
+      this.data, 
+      {type: 'deviceEvent', subType: 'zen'},
+      ['inputTime']
+    );
+    this.confidentialEvents = this.setEvents(
+      this.data, 
+      {type: 'deviceEvent', subType: 'confidential'},
+      ['inputTime']
+    );
+    console.log(this.confidentialEvents);
+    console.log('this.confidentialEvents');
 
     // get PhysicalActivities
     this.deduplicatePhysicalActivities(data);
@@ -749,6 +773,20 @@ function TidelineData(data, opts) {
   this.deduplicatePhysicalActivities(data);
 
   endTimer('deduplicatePhysicalActivities');
+
+  this.zenEvents = this.setEvents(
+    data, 
+    {type: 'deviceEvent', subType: 'zen'},
+    ['inputTime']
+  );
+  this.confidentialEvents = this.setEvents(
+    data, 
+    {type: 'deviceEvent', subType: 'confidential'},
+    ['inputTime']
+  );
+  console.log('this.confidentialEvents');
+  console.log(this.confidentialEvents);
+  console.log(data);
 
   this.setBGPrefs();
 
