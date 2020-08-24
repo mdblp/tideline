@@ -342,7 +342,7 @@ var PhysicalActivity = function(opts) {
 
   this.deviceTime = opts.deviceTime;
   this.duration = opts.duration;
-  if (opts.eventId !== 'ToBeDeleted') {
+  if (opts.eventId !== 'undefined') {
     this.eventId = opts.eventId;
   }
   this.reportedIntensity = opts.reportedIntensity;

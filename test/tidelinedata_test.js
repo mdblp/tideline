@@ -976,11 +976,11 @@ describe('TidelineData', function() {
       }),
       new types.PhysicalActivity({
         deviceTime: '2014-07-03T10:30:00',
-        eventId: 'ToBeDeleted',
+        eventId: 'undefined',
       }),
       new types.PhysicalActivity({
         deviceTime: '2014-07-04T10:30:00',
-        eventId: 'ToBeDeleted',
+        eventId: 'undefined',
       })
     ];
     var thisTd = new TidelineData(data);
@@ -990,7 +990,7 @@ describe('TidelineData', function() {
     });
 
     it('should deduplicate PAs based on eventId', function() {
-      expect(thisTd.physicalActivities.length).to.equal(3);
+      expect(thisTd.physicalActivities.length).to.equal(4);
     });
   });
 

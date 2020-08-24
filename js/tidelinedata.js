@@ -230,9 +230,19 @@ function TidelineData(data, opts) {
   };
 
   this.deduplicatePhysicalActivities = function (data = []) {
+    _.filter( data, {type: 'physicalActivity'}).forEach(
+      pa => {
+        if ((pa.eventId === undefined || pa.eventId === '')) {
+          pa.eventId = pa.id;
+        }
+        if (pa.inputTime === undefined) {
+          pa.inputTime = pa.normalTime;
+        }
+        return pa;
+      });
     var physicalActivity = _.groupBy(_.filter( data, {type: 'physicalActivity'}), 'eventId');
     _.forEach(physicalActivity, (value, key) => {
-      physicalActivity[key] = _.orderBy(value, ['deviceTime'], ['desc']);
+      physicalActivity[key] = _.orderBy(value, ['inputTime'], ['desc']);
     })
     this.physicalActivities = _.map(physicalActivity, (value) => value[0]);
   };
@@ -429,7 +439,7 @@ function TidelineData(data, opts) {
     this.setDeviceParameters(this.data);
 
     // get PhysicalActivities
-    this.deduplicatePhysicalActivities(data);
+    this.deduplicatePhysicalActivities(this.data);
   
     // Timezone change events (for tooltips)
     this.checkTimezone();
