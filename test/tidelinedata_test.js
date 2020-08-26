@@ -989,13 +989,23 @@ describe('TidelineData', function() {
       assert.isFunction(thisTd.deduplicatePhysicalActivities);
     });
 
+    const PA1 = _.filter(thisTd.physicalActivities, { 'eventId': 'PA1' });
+    const PA2 = _.filter(thisTd.physicalActivities, { 'eventId': 'PA2' });
+    const PA3 = _.filter(thisTd.physicalActivities, { 'eventId': data[2].id });
+
     it('should deduplicate PAs based on eventId', function() {
+      // PA1, PA2 and undefined
       expect(thisTd.physicalActivities.length).to.equal(3);
+      expect(PA1.length).to.equal(1);
+      expect(PA2.length).to.equal(1);
+      expect(PA3.length).to.equal(1);
     });
 
-    it('should have taken the most recent activity', () => {
-      expect(thisTd.physicalActivities[0].inputTime).to.equal(data[1].deviceTime + '.000Z');
-      expect(thisTd.physicalActivities[2].inputTime).to.equal(data[4].inputTime);
+    it('should have taken the most recent activity by eventID', () => {
+      expect(PA1[0].id).to.equal(data[1].id);
+      expect(PA1[0].inputTime).to.equal(data[1].deviceTime + '.000Z');
+      expect(PA2[0].id).to.equal(data[4].id);
+      expect(PA2[0].inputTime).to.equal(data[4].inputTime);
     })
   });
 
