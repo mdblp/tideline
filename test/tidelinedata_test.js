@@ -975,23 +975,28 @@ describe('TidelineData', function() {
         deviceTime: '2014-07-02T10:30:00',
       }),
       new types.PhysicalActivity({
-        deviceTime: '2014-07-03T10:30:00',
-        eventId: 'undefined',
+        inputTime: moment.utc().subtract(4, 'hours').toISOString(),
+        eventId: 'PA2',
       }),
       new types.PhysicalActivity({
-        deviceTime: '2014-07-04T10:30:00',
-        eventId: 'undefined',
+        inputTime: moment.utc().subtract(3, 'hours').toISOString(),
+        eventId: 'PA2',
       })
     ];
-    var thisTd = new TidelineData(data);
+    var thisTd = new TidelineData(_.cloneDeep(data), {});
 
     it('should be a function', function() {
       assert.isFunction(thisTd.deduplicatePhysicalActivities);
     });
 
     it('should deduplicate PAs based on eventId', function() {
-      expect(thisTd.physicalActivities.length).to.equal(4);
+      expect(thisTd.physicalActivities.length).to.equal(3);
     });
+
+    it('should have taken the most recent activity', () => {
+      expect(thisTd.physicalActivities[0].inputTime).to.equal(data[1].deviceTime + '.000Z');
+      expect(thisTd.physicalActivities[2].inputTime).to.equal(data[4].inputTime);
+    })
   });
 
 });
