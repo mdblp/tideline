@@ -1,12 +1,13 @@
 var _ = require('lodash');
+var PropTypes = require('prop-types');
 var React = require('react');
 var i18next = require('i18next');
 var t = i18next.t.bind(i18next);
 
 var NoDataContainer = React.createClass({
   propTypes: {
-    message: React.PropTypes.string.isRequired,
-    moreInfo: React.PropTypes.string
+    message: PropTypes.string.isRequired,
+    moreInfo: PropTypes.string
   },
 
   getDefaultProps: function() {

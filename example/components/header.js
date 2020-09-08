@@ -15,6 +15,7 @@
  * == BSD2 LICENSE ==
  */
 var bows = require('bows');
+var PropTypes = require('prop-types');
 var React = require('react');
 var cx = require('classnames');
 
@@ -24,17 +25,17 @@ var tideline = {
 
 var TidelineHeader = React.createClass({
   propTypes: {
-    chartType: React.PropTypes.string.isRequired,
-    inTransition: React.PropTypes.bool,
-    atMostRecent: React.PropTypes.bool,
-    title: React.PropTypes.string.isRequired,
-    onClickBack: React.PropTypes.func,
-    onClickModal: React.PropTypes.func.isRequired,
-    onClickMostRecent: React.PropTypes.func,
-    onClickNext: React.PropTypes.func,
-    onClickOneDay: React.PropTypes.func.isRequired,
-    onClickTwoWeeks: React.PropTypes.func.isRequired,
-    onClickSettings: React.PropTypes.func.isRequired
+    chartType: PropTypes.string.isRequired,
+    inTransition: PropTypes.bool,
+    atMostRecent: PropTypes.bool,
+    title: PropTypes.string.isRequired,
+    onClickBack: PropTypes.func,
+    onClickModal: PropTypes.func.isRequired,
+    onClickMostRecent: PropTypes.func,
+    onClickNext: PropTypes.func,
+    onClickOneDay: PropTypes.func.isRequired,
+    onClickTwoWeeks: PropTypes.func.isRequired,
+    onClickSettings: PropTypes.func.isRequired
   },
   render: function() {
     var next = this.props.next;

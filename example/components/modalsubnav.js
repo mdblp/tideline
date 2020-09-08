@@ -1,3 +1,4 @@
+var PropTypes = require('prop-types');
 /* 
  * == BSD2 LICENSE ==
  * Copyright (c) 2014, Tidepool Project
@@ -24,13 +25,13 @@ var DaysGroup = require('./dayfiltergroup');
 
 var ModalSubNav = React.createClass({
   propTypes: {
-    activeDays: React.PropTypes.object.isRequired,
-    activeDomain: React.PropTypes.string.isRequired,
-    extentSize: React.PropTypes.number.isRequired,
-    domainClickHandlers: React.PropTypes.object.isRequired,
-    onClickDay: React.PropTypes.func.isRequired,
-    toggleWeekdays: React.PropTypes.func.isRequired,
-    toggleWeekends: React.PropTypes.func.isRequired
+    activeDays: PropTypes.object.isRequired,
+    activeDomain: PropTypes.string.isRequired,
+    extentSize: PropTypes.number.isRequired,
+    domainClickHandlers: PropTypes.object.isRequired,
+    onClickDay: PropTypes.func.isRequired,
+    toggleWeekdays: PropTypes.func.isRequired,
+    toggleWeekends: PropTypes.func.isRequired
   },
   DAY_ABBREVS: {
     monday: 'M',

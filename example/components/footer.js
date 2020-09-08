@@ -15,6 +15,7 @@
  * == BSD2 LICENSE ==
  */
 var bows = require('bows');
+var PropTypes = require('prop-types');
 var React = require('react');
 var cx = require('classnames');
 
@@ -24,13 +25,13 @@ var tideline = {
 
 var TidelineFooter = React.createClass({
   propTypes: {
-    chartType: React.PropTypes.string.isRequired,
-    onClickBoxOverlay: React.PropTypes.func,
-    onClickGroup: React.PropTypes.func,
-    onClickLines: React.PropTypes.func,
-    onClickValues: React.PropTypes.func,
-    grouped: React.PropTypes.bool,
-    showingValues: React.PropTypes.bool
+    chartType: PropTypes.string.isRequired,
+    onClickBoxOverlay: PropTypes.func,
+    onClickGroup: PropTypes.func,
+    onClickLines: PropTypes.func,
+    onClickValues: PropTypes.func,
+    grouped: PropTypes.bool,
+    showingValues: PropTypes.bool
   },
   render: function() {
     var valuesLinkClass = cx({

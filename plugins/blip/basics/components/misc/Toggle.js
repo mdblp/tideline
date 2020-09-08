@@ -12,7 +12,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 /* jshint esnext:true, asi: true */
 
 var _ = _interopRequire(require("lodash"));
-var React = _interopRequire(require("react"));
+var var PropTypes = require('prop-types');, React = _interopRequire(require("react"));
 var ReactDOM = _interopRequire(require("react-dom"));
 
 var classNames = _interopRequire(require("classnames"));
@@ -29,14 +29,14 @@ module.exports = React.createClass({
   displayName: "Toggle",
 
   propTypes: {
-    checked: React.PropTypes.bool,
-    defaultChecked: React.PropTypes.bool,
-    onChange: React.PropTypes.func,
-    name: React.PropTypes.string,
-    value: React.PropTypes.string,
-    id: React.PropTypes.string,
-    "aria-labelledby": React.PropTypes.string,
-    "aria-label": React.PropTypes.string
+    checked: PropTypes.bool,
+    defaultChecked: PropTypes.bool,
+    onChange: PropTypes.func,
+    name: PropTypes.string,
+    value: PropTypes.string,
+    id: PropTypes.string,
+    "aria-labelledby": PropTypes.string,
+    "aria-label": PropTypes.string
   },
 
   getInitialState: function getInitialState() {

@@ -16,14 +16,15 @@
  */
 
 var _ = require('lodash');
+var PropTypes = require('prop-types');
 var React = require('react');
 var format = require('../../../../../../js/data/util/format');
 
 var InfusionHoverDisplay = React.createClass({
   propTypes: {
-    data: React.PropTypes.object,
-    date: React.PropTypes.string.isRequired,
-    trackMetric: React.PropTypes.func.isRequired,
+    data: PropTypes.object,
+    date: PropTypes.string.isRequired,
+    trackMetric: PropTypes.func.isRequired,
   },
   render: function() {
     var times = this.props.data.dataByDate[this.props.date].data;

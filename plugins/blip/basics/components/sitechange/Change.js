@@ -16,6 +16,7 @@
  */
 
 var _ = require('lodash');
+var PropTypes = require('prop-types');
 var React = require('react');
 var cx = require('classnames');
 var i18next = require('i18next');
@@ -25,9 +26,9 @@ var constants = require('../../logic/constants');
 
 var Change = React.createClass({
   propTypes: {
-    daysSince: React.PropTypes.number.isRequired,
-    count: React.PropTypes.number,
-    type: React.PropTypes.string.isRequired,
+    daysSince: PropTypes.number.isRequired,
+    count: PropTypes.number,
+    type: PropTypes.string.isRequired,
   },
   render: function() {
     var daysText = null;

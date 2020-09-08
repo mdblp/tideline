@@ -16,6 +16,7 @@
  */
 
 var _ = require('lodash');
+var PropTypes = require('prop-types');
 var React = require('react');
 var nestedShrinkFactor = 4;
 
@@ -24,10 +25,10 @@ var BasicsUtils = require('../BasicsUtils');
 var WrapCount = React.createClass({
   mixins: [BasicsUtils],
   propTypes: {
-    chartWidth: React.PropTypes.number.isRequired,
-    data: React.PropTypes.object,
-    date: React.PropTypes.string.isRequired,
-    subtotalType: React.PropTypes.string,
+    chartWidth: PropTypes.number.isRequired,
+    data: PropTypes.object,
+    date: PropTypes.string.isRequired,
+    subtotalType: PropTypes.string,
   },
   render: function() {
     var dots = this.renderDots();

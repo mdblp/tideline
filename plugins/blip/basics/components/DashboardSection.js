@@ -18,6 +18,7 @@
 var _ = require('lodash');
 var bows = require('bows');
 var cx = require('classnames');
+var PropTypes = require('prop-types');
 var React = require('react');
 
 var debug = bows('Section');
@@ -29,24 +30,24 @@ var togglableState = require('../TogglableState');
 
 var DashboardSection = React.createClass({
   propTypes: {
-    bgClasses: React.PropTypes.object.isRequired,
-    bgUnits: React.PropTypes.string.isRequired,
-    chartWidth: React.PropTypes.number.isRequired,
-    data: React.PropTypes.object.isRequired,
-    days: React.PropTypes.array.isRequired,
-    name: React.PropTypes.string.isRequired,
-    onSelectDay: React.PropTypes.func.isRequired,
-    togglable: React.PropTypes.oneOf([
+    bgClasses: PropTypes.object.isRequired,
+    bgUnits: PropTypes.string.isRequired,
+    chartWidth: PropTypes.number.isRequired,
+    data: PropTypes.object.isRequired,
+    days: PropTypes.array.isRequired,
+    name: PropTypes.string.isRequired,
+    onSelectDay: PropTypes.func.isRequired,
+    togglable: PropTypes.oneOf([
       togglableState.open,
       togglableState.closed,
       togglableState.off,
     ]).isRequired,
-    section: React.PropTypes.object.isRequired,
-    timezone: React.PropTypes.string.isRequired,
-    title: React.PropTypes.oneOfType([
-        React.PropTypes.string,
-        React.PropTypes.func ]).isRequired,
-    trackMetric: React.PropTypes.func.isRequired,
+    section: PropTypes.object.isRequired,
+    timezone: PropTypes.string.isRequired,
+    title: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.func ]).isRequired,
+    trackMetric: PropTypes.func.isRequired,
   },
   render: function() {
     var dataDisplay;

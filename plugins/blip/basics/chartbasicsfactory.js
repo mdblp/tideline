@@ -24,6 +24,7 @@ var t = i18next.t.bind(i18next);
 var tideline = require('../../../js/');
 
 var _ = require('lodash');
+var PropTypes = require('prop-types');
 var React = require('react');
 
 require('./less/basics.less');
@@ -39,17 +40,17 @@ var togglableState = require('./TogglableState');
 
 var BasicsChart = React.createClass({
   propTypes: {
-    bgClasses: React.PropTypes.object.isRequired,
-    bgUnits: React.PropTypes.string.isRequired,
-    onSelectDay: React.PropTypes.func.isRequired,
-    patient: React.PropTypes.object.isRequired,
-    patientData: React.PropTypes.object.isRequired,
-    permsOfLoggedInUser: React.PropTypes.object.isRequired,
-    size: React.PropTypes.object.isRequired,
-    timePrefs: React.PropTypes.object.isRequired,
-    updateBasicsData: React.PropTypes.func.isRequired,
-    updateBasicsSettings: React.PropTypes.func.isRequired,
-    trackMetric: React.PropTypes.func.isRequired,
+    bgClasses: PropTypes.object.isRequired,
+    bgUnits: PropTypes.string.isRequired,
+    onSelectDay: PropTypes.func.isRequired,
+    patient: PropTypes.object.isRequired,
+    patientData: PropTypes.object.isRequired,
+    permsOfLoggedInUser: PropTypes.object.isRequired,
+    size: PropTypes.object.isRequired,
+    timePrefs: PropTypes.object.isRequired,
+    updateBasicsData: PropTypes.func.isRequired,
+    updateBasicsSettings: PropTypes.func.isRequired,
+    trackMetric: PropTypes.func.isRequired,
   },
 
   _adjustSectionsBasedOnAvailableData: function(basicsData) {

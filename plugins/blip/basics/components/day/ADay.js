@@ -1,3 +1,4 @@
+var PropTypes = require('prop-types');
 var React = require('react');
 var moment = require('moment-timezone');
 var cx = require('classnames');
@@ -8,18 +9,18 @@ var constants = require('../../logic/constants');
 
 var ADay = React.createClass({
   propTypes: {
-    dayAbbrevMask: React.PropTypes.string.isRequired,
-    monthAbbrevMask: React.PropTypes.string.isRequired,
-    chart: React.PropTypes.func.isRequired,
-    chartWidth: React.PropTypes.number.isRequired,
-    data: React.PropTypes.object,
-    date: React.PropTypes.string.isRequired,
-    future: React.PropTypes.bool.isRequired,
-    isFirst: React.PropTypes.bool.isRequired,
-    mostRecent: React.PropTypes.bool.isRequired,
-    onHover: React.PropTypes.func.isRequired,
-    subtotalType: React.PropTypes.string,
-    type: React.PropTypes.string.isRequired
+    dayAbbrevMask: PropTypes.string.isRequired,
+    monthAbbrevMask: PropTypes.string.isRequired,
+    chart: PropTypes.func.isRequired,
+    chartWidth: PropTypes.number.isRequired,
+    data: PropTypes.object,
+    date: PropTypes.string.isRequired,
+    future: PropTypes.bool.isRequired,
+    isFirst: PropTypes.bool.isRequired,
+    mostRecent: PropTypes.bool.isRequired,
+    onHover: PropTypes.func.isRequired,
+    subtotalType: PropTypes.string,
+    type: PropTypes.string.isRequired
   },
   getDefaultProps: function() {
     return {

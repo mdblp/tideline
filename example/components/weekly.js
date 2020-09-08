@@ -17,6 +17,7 @@
 var _ = require('lodash');
 var bows = require('bows');
 var moment = require('moment-timezone');
+var PropTypes = require('prop-types');
 var React = require('react');
 var ReactDOM = require('react-dom');
 
@@ -36,16 +37,16 @@ var Weekly = React.createClass({
   chartType: 'weekly',
   log: bows('Weekly View'),
   propTypes: {
-    bgPrefs: React.PropTypes.object.isRequired,
-    chartPrefs: React.PropTypes.object.isRequired,
-    initialDatetimeLocation: React.PropTypes.string,
-    patientData: React.PropTypes.object.isRequired,
-    onSwitchToDaily: React.PropTypes.func.isRequired,
-    onSwitchToModal: React.PropTypes.func.isRequired,
-    onSwitchToSettings: React.PropTypes.func.isRequired,
-    onSwitchToWeekly: React.PropTypes.func.isRequired,
-    updateChartPrefs: React.PropTypes.func.isRequired,
-    updateDatetimeLocation: React.PropTypes.func.isRequired
+    bgPrefs: PropTypes.object.isRequired,
+    chartPrefs: PropTypes.object.isRequired,
+    initialDatetimeLocation: PropTypes.string,
+    patientData: PropTypes.object.isRequired,
+    onSwitchToDaily: PropTypes.func.isRequired,
+    onSwitchToModal: PropTypes.func.isRequired,
+    onSwitchToSettings: PropTypes.func.isRequired,
+    onSwitchToWeekly: PropTypes.func.isRequired,
+    updateChartPrefs: PropTypes.func.isRequired,
+    updateDatetimeLocation: PropTypes.func.isRequired
   },
   getInitialState: function() {
     return {
@@ -162,17 +163,17 @@ var WeeklyChart = React.createClass({
   chartOpts: ['bgClasses', 'bgUnits', 'timePrefs'],
   log: bows('Weekly Chart'),
   propTypes: {
-    bgClasses: React.PropTypes.object.isRequired,
-    bgUnits: React.PropTypes.string.isRequired,
-    initialDatetimeLocation: React.PropTypes.string,
-    patientData: React.PropTypes.object.isRequired,
-    timePrefs: React.PropTypes.object.isRequired,
+    bgClasses: PropTypes.object.isRequired,
+    bgUnits: PropTypes.string.isRequired,
+    initialDatetimeLocation: PropTypes.string,
+    patientData: PropTypes.object.isRequired,
+    timePrefs: PropTypes.object.isRequired,
     // handlers
-    onDatetimeLocationChange: React.PropTypes.func.isRequired,
-    onMostRecent: React.PropTypes.func.isRequired,
-    onClickValues: React.PropTypes.func.isRequired,
-    onSelectSMBG: React.PropTypes.func.isRequired,
-    onTransition: React.PropTypes.func.isRequired
+    onDatetimeLocationChange: PropTypes.func.isRequired,
+    onMostRecent: PropTypes.func.isRequired,
+    onClickValues: PropTypes.func.isRequired,
+    onSelectSMBG: PropTypes.func.isRequired,
+    onTransition: PropTypes.func.isRequired
   },
   componentDidMount: function() {
     this.mountChart(ReactDOM.findDOMNode(this));

@@ -18,6 +18,7 @@
 /* jshint esversion:6 */
 
 var _ = require('lodash');
+var PropTypes = require('prop-types');
 var React = require('react');
 var cx = require('classnames');
 
@@ -29,13 +30,13 @@ var constants = require('../../logic/constants');
 var Selector = React.createClass({
   mixins: [BasicsUtils],
   propTypes: {
-    data: React.PropTypes.object,
-    selectedSubtotal: React.PropTypes.string.isRequired,
-    selectorOptions: React.PropTypes.object.isRequired,
-    selectorMetaData: React.PropTypes.object.isRequired,
-    updateBasicsSettings: React.PropTypes.func.isRequired,
-    sectionId: React.PropTypes.string.isRequired,
-    trackMetric: React.PropTypes.func.isRequired,
+    data: PropTypes.object,
+    selectedSubtotal: PropTypes.string.isRequired,
+    selectorOptions: PropTypes.object.isRequired,
+    selectorMetaData: PropTypes.object.isRequired,
+    updateBasicsSettings: PropTypes.func.isRequired,
+    sectionId: PropTypes.string.isRequired,
+    trackMetric: PropTypes.func.isRequired,
   },
   render: function() {
     var self = this;

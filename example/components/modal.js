@@ -19,6 +19,7 @@ var bows = require('bows');
 var crossfilter = require('crossfilter2');
 var d3 = window.d3;
 var moment = require('moment-timezone');
+var PropTypes = require('prop-types');
 var React = require('react');
 var ReactDOM = require('react-dom');
 
@@ -38,16 +39,16 @@ var Modal = React.createClass({
   chartType: 'modal',
   log: bows('Modal Day'),
   propTypes: {
-    bgPrefs: React.PropTypes.object.isRequired,
-    chartPrefs: React.PropTypes.object.isRequired,
-    initialDatetimeLocation: React.PropTypes.string,
-    patientData: React.PropTypes.object.isRequired,
-    onSwitchToDaily: React.PropTypes.func.isRequired,
-    onSwitchToModal: React.PropTypes.func.isRequired,
-    onSwitchToSettings: React.PropTypes.func.isRequired,
-    onSwitchToWeekly: React.PropTypes.func.isRequired,
-    updateChartPrefs: React.PropTypes.func.isRequired,
-    updateDatetimeLocation: React.PropTypes.func.isRequired
+    bgPrefs: PropTypes.object.isRequired,
+    chartPrefs: PropTypes.object.isRequired,
+    initialDatetimeLocation: PropTypes.string,
+    patientData: PropTypes.object.isRequired,
+    onSwitchToDaily: PropTypes.func.isRequired,
+    onSwitchToModal: PropTypes.func.isRequired,
+    onSwitchToSettings: PropTypes.func.isRequired,
+    onSwitchToWeekly: PropTypes.func.isRequired,
+    updateChartPrefs: PropTypes.func.isRequired,
+    updateDatetimeLocation: PropTypes.func.isRequired
   },
   getInitialState: function() {
     return {
@@ -256,19 +257,19 @@ var ModalChart = React.createClass({
   chartOpts: ['bgClasses', 'bgUnits', 'boxOverlay', 'grouped', 'showingLines'],
   log: bows('Modal Chart'),
   propTypes: {
-    activeDays: React.PropTypes.object.isRequired,
-    bgClasses: React.PropTypes.object.isRequired,
-    bgUnits: React.PropTypes.string.isRequired,
-    extentSize: React.PropTypes.number.isRequired,
-    initialDatetimeLocation: React.PropTypes.string,
-    patientData: React.PropTypes.object.isRequired,
-    boxOverlay: React.PropTypes.bool.isRequired,
-    grouped: React.PropTypes.bool.isRequired,
-    showingLines: React.PropTypes.bool.isRequired,
-    timePrefs: React.PropTypes.object.isRequired,
+    activeDays: PropTypes.object.isRequired,
+    bgClasses: PropTypes.object.isRequired,
+    bgUnits: PropTypes.string.isRequired,
+    extentSize: PropTypes.number.isRequired,
+    initialDatetimeLocation: PropTypes.string,
+    patientData: PropTypes.object.isRequired,
+    boxOverlay: PropTypes.bool.isRequired,
+    grouped: PropTypes.bool.isRequired,
+    showingLines: PropTypes.bool.isRequired,
+    timePrefs: PropTypes.object.isRequired,
     // handlers
-    onDatetimeLocationChange: React.PropTypes.func.isRequired,
-    onSelectDay: React.PropTypes.func.isRequired
+    onDatetimeLocationChange: PropTypes.func.isRequired,
+    onSelectDay: PropTypes.func.isRequired
   },
   componentWillMount: function() {
     console.time('Modal Pre-Mount');

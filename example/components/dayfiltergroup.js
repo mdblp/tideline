@@ -1,3 +1,4 @@
+var PropTypes = require('prop-types');
 /* 
  * == BSD2 LICENSE ==
  */
@@ -7,10 +8,10 @@ var cx = require('classnames');
 
 var DayGrouping = React.createClass({
   propTypes: {
-    active: React.PropTypes.bool.isRequired,
-    category: React.PropTypes.string.isRequired,
-    days: React.PropTypes.array.isRequired,
-    onClickGroup: React.PropTypes.func.isRequired
+    active: PropTypes.bool.isRequired,
+    category: PropTypes.string.isRequired,
+    days: PropTypes.array.isRequired,
+    onClickGroup: PropTypes.func.isRequired
   },
   render: function() {
     var groupClass = cx({

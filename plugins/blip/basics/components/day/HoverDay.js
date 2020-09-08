@@ -1,3 +1,4 @@
+var PropTypes = require('prop-types');
 var React = require('react');
 var moment = require('moment-timezone');
 var cx = require('classnames');
@@ -11,17 +12,17 @@ var constants = require('../../logic/constants');
 var HoverDay = React.createClass({
   mixins: [BasicsUtils],
   propTypes: {
-    data: React.PropTypes.object,
-    date: React.PropTypes.string.isRequired,
-    dayAbbrevMask: React.PropTypes.string.isRequired,
-    hoverDisplay: React.PropTypes.func,
-    onHover: React.PropTypes.func.isRequired,
-    onSelectDay: React.PropTypes.func.isRequired,
-    subtotalType: React.PropTypes.string,
-    timezone: React.PropTypes.string.isRequired,
-    type: React.PropTypes.string.isRequired,
-    title: React.PropTypes.string.isRequired,
-    trackMetric: React.PropTypes.func.isRequired,
+    data: PropTypes.object,
+    date: PropTypes.string.isRequired,
+    dayAbbrevMask: PropTypes.string.isRequired,
+    hoverDisplay: PropTypes.func,
+    onHover: PropTypes.func.isRequired,
+    onSelectDay: PropTypes.func.isRequired,
+    subtotalType: PropTypes.string,
+    timezone: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    trackMetric: PropTypes.func.isRequired,
   },
   getDefaultProps: function() {
     return {

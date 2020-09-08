@@ -16,6 +16,7 @@
  */
 var _ = require('lodash');
 var bows = require('bows');
+var PropTypes = require('prop-types');
 var React = require('react');
 var ReactDOM = require('react-dom');
 
@@ -33,13 +34,13 @@ var Settings = React.createClass({
   chartType: 'settings',
   log: bows('Settings View'),
   propTypes: {
-    bgPrefs: React.PropTypes.object.isRequired,
-    chartPrefs: React.PropTypes.object.isRequired,
-    patientData: React.PropTypes.object.isRequired,
-    onSwitchToDaily: React.PropTypes.func.isRequired,
-    onSwitchToModal: React.PropTypes.func.isRequired,
-    onSwitchToSettings: React.PropTypes.func.isRequired,
-    onSwitchToWeekly: React.PropTypes.func.isRequired
+    bgPrefs: PropTypes.object.isRequired,
+    chartPrefs: PropTypes.object.isRequired,
+    patientData: PropTypes.object.isRequired,
+    onSwitchToDaily: PropTypes.func.isRequired,
+    onSwitchToModal: PropTypes.func.isRequired,
+    onSwitchToSettings: PropTypes.func.isRequired,
+    onSwitchToWeekly: PropTypes.func.isRequired
   },
   getInitialState: function() {
     return {
@@ -97,9 +98,9 @@ var SettingsChart = React.createClass({
   chartOpts: ['bgUnits'],
   log: bows('Settings Chart'),
   propTypes: {
-    bgUnits: React.PropTypes.string.isRequired,
-    initialDatetimeLocation: React.PropTypes.string,
-    patientData: React.PropTypes.object.isRequired,
+    bgUnits: PropTypes.string.isRequired,
+    initialDatetimeLocation: PropTypes.string,
+    patientData: PropTypes.object.isRequired,
   },
   componentDidMount: function() {
     this.mountChart(ReactDOM.findDOMNode(this));

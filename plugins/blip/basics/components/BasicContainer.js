@@ -18,18 +18,19 @@
 var _ = require('lodash');
 var bows = require('bows');
 var cx = require('classnames');
+var PropTypes = require('prop-types');
 var React = require('react');
 
 var BasicContainer = React.createClass({
   propTypes: {
-    bgClasses: React.PropTypes.object.isRequired,
-    bgUnits: React.PropTypes.string.isRequired,
-    chart: React.PropTypes.func.isRequired,
-    data: React.PropTypes.object.isRequired,
-    labels: React.PropTypes.object.isRequired,
-    title: React.PropTypes.oneOfType([
-        React.PropTypes.string,
-        React.PropTypes.func ]).isRequired
+    bgClasses: PropTypes.object.isRequired,
+    bgUnits: PropTypes.string.isRequired,
+    chart: PropTypes.func.isRequired,
+    data: PropTypes.object.isRequired,
+    labels: PropTypes.object.isRequired,
+    title: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.func ]).isRequired
   },
   render: function() {
     return (
