@@ -7,8 +7,8 @@ var t = i18next.t.bind(i18next);
 
 var constants = require('../../logic/constants');
 
-var ADay = React.createClass({
-  propTypes: {
+class ADay extends React.Component {
+  static propTypes = {
     dayAbbrevMask: PropTypes.string.isRequired,
     monthAbbrevMask: PropTypes.string.isRequired,
     chart: PropTypes.func.isRequired,
@@ -21,38 +21,41 @@ var ADay = React.createClass({
     onHover: PropTypes.func.isRequired,
     subtotalType: PropTypes.string,
     type: PropTypes.string.isRequired
-  },
-  getDefaultProps: function() {
-    return {
-      dayAbbrevMask: 'D',
-      monthAbbrevMask: 'MMM D'
-    };
-  },
+  };
+
+  static defaultProps = {
+    dayAbbrevMask: 'D',
+    monthAbbrevMask: 'MMM D'
+  };
+
   /**
    * We currently do not want to ever re-render this component,
    * possibly subject to change in the future
    *
    * @return {boolean}
    */
-  shouldComponentUpdate: function(nextProps, nextState) {
+  shouldComponentUpdate(nextProps, nextState) {
     if (nextProps.subtotalType !== this.props.subtotalType || nextProps.chartWidth !== this.props.chartWidth) {
       return true;
     }
     return false;
-  },
-  isASiteChangeEvent: function() {
+  }
+
+  isASiteChangeEvent = () => {
     return (this.props.type === constants.SITE_CHANGE_CANNULA) ||
       (this.props.type === constants.SITE_CHANGE_TUBING) ||
       (this.props.type === constants.SITE_CHANGE_RESERVOIR);
-  },
-  isASiteChangeDay: function() {
+  };
+
+  isASiteChangeDay = () => {
     if (!this.props.data || !this.props.data.infusionSiteHistory) {
       return false;
     }
 
     return (this.props.data.infusionSiteHistory[this.props.date].type === constants.SITE_CHANGE);
-  },
-  mouseEnter: function () {
+  };
+
+  mouseEnter = () => {
     // We do not want a hover effect on days in the future
     if (this.props.future) {
       return;
@@ -62,14 +65,16 @@ var ADay = React.createClass({
       return;
     }
     this.props.onHover(this.props.date);
-  },
-  mouseLeave: function () {
+  };
+
+  mouseLeave = () => {
     if (this.props.future) {
       return;
     }
     this.props.onHover(null);
-  },
-  render: function() {
+  };
+
+  render() {
     var date = moment(this.props.date);
 
     var isDisabled = (this.props.type === constants.SECTION_TYPE_UNDECLARED);
@@ -109,6 +114,6 @@ var ADay = React.createClass({
       </div>
     );
   }
-});
+}
 
 module.exports = ADay;

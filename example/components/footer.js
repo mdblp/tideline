@@ -23,8 +23,8 @@ var tideline = {
   log: bows('Footer')
 };
 
-var TidelineFooter = React.createClass({
-  propTypes: {
+class TidelineFooter extends React.Component {
+  static propTypes = {
     chartType: PropTypes.string.isRequired,
     onClickBoxOverlay: PropTypes.func,
     onClickGroup: PropTypes.func,
@@ -32,8 +32,9 @@ var TidelineFooter = React.createClass({
     onClickValues: PropTypes.func,
     grouped: PropTypes.bool,
     showingValues: PropTypes.bool
-  },
-  render: function() {
+  };
+
+  render() {
     var valuesLinkClass = cx({
       'tidelineNavLabel': true,
       'tidelineNavRightLabel': true
@@ -148,6 +149,6 @@ var TidelineFooter = React.createClass({
       );
     /* jshint ignore:end */
   }
-});
+}
 
 module.exports = TidelineFooter;

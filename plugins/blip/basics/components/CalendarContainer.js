@@ -24,6 +24,8 @@ var moment = require('moment-timezone');
 var PropTypes = require('prop-types');
 var React = require('react');
 
+var createReactClass = require('create-react-class');
+
 var debug = bows('Calendar');
 var basicsActions = require('../logic/actions');
 var BasicsUtils = require('./BasicsUtils');
@@ -36,8 +38,10 @@ var togglableState = require('../TogglableState');
 
 var { DDD_FORMAT } = require('../../../../js/data/util/constants');
 
-var CalendarContainer = React.createClass({
+var CalendarContainer = createReactClass({
+  displayName: 'CalendarContainer',
   mixins: [BasicsUtils],
+
   propTypes: {
     bgClasses: PropTypes.object.isRequired,
     bgUnits: PropTypes.string.isRequired,
@@ -213,7 +217,7 @@ var CalendarContainer = React.createClass({
         );
       }
     });
-  }
+  },
 });
 
 module.exports = CalendarContainer;

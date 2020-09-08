@@ -20,6 +20,7 @@
 var _ = require('lodash');
 var PropTypes = require('prop-types');
 var React = require('react');
+var createReactClass = require('create-react-class');
 var cx = require('classnames');
 
 var basicsActions = require('../../logic/actions');
@@ -27,8 +28,10 @@ var BasicsUtils = require('../BasicsUtils');
 
 var constants = require('../../logic/constants');
 
-var Selector = React.createClass({
+var Selector = createReactClass({
+  displayName: 'Selector',
   mixins: [BasicsUtils],
+
   propTypes: {
     data: PropTypes.object,
     selectedSubtotal: PropTypes.string.isRequired,
@@ -38,6 +41,7 @@ var Selector = React.createClass({
     sectionId: PropTypes.string.isRequired,
     trackMetric: PropTypes.func.isRequired,
   },
+
   render: function() {
     var self = this;
 
@@ -48,6 +52,7 @@ var Selector = React.createClass({
       </div>
     );
   },
+
   renderMessage: function() {
     if (!this.props.selectorMetaData.hasOwnProperty('latestPump')) {
       return;
@@ -135,6 +140,7 @@ var Selector = React.createClass({
       <p className={messageClass}>{message}</p>
     );
   },
+
   renderOptions: function() {
     var self = this;
 
@@ -158,6 +164,7 @@ var Selector = React.createClass({
       );
     });
   },
+
   renderOption: function(option) {
     var optionClass = cx({
       'SiteChangeSelector-option': true,
@@ -178,6 +185,7 @@ var Selector = React.createClass({
       </label>
     );
   },
+
   subAction: function(pump, action) {
     var pumpVocabulary = {
       [constants.ANIMAS]: {
@@ -217,9 +225,10 @@ var Selector = React.createClass({
       <strong key={action}>{pumpVocabulary.default[action]}</strong>
     );
   },
+
   handleSelectSubtotal: function(selectedSubtotal, optionLabel) {
     basicsActions.setSiteChangeEvent(this.props.sectionId, selectedSubtotal, optionLabel, this.props.trackMetric, this.props.updateBasicsSettings);
-  }
+  },
 });
 
 module.exports = Selector;

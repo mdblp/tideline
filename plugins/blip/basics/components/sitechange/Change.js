@@ -24,13 +24,14 @@ var t = i18next.t.bind(i18next);
 
 var constants = require('../../logic/constants');
 
-var Change = React.createClass({
-  propTypes: {
+class Change extends React.Component {
+  static propTypes = {
     daysSince: PropTypes.number.isRequired,
     count: PropTypes.number,
     type: PropTypes.string.isRequired,
-  },
-  render: function() {
+  };
+
+  render() {
     var daysText = null;
     var daysSinceNum = null;
     if (!_.isNaN(this.props.daysSince)){
@@ -62,7 +63,7 @@ var Change = React.createClass({
         {countElement}
       </div>
     );
-  },
-});
+  }
+}
 
 module.exports = Change;

@@ -21,12 +21,16 @@ var d3 = require('d3');
 var PropTypes = require('prop-types');
 var React = require('react');
 
+var createReactClass = require('create-react-class');
+
 var basicsActions = require('../../logic/actions');
 var BasicsUtils = require('../BasicsUtils');
 var format = require('../../../../../js/data/util/format');
 
-var SummaryGroup = React.createClass({
+var SummaryGroup = createReactClass({
+  displayName: 'SummaryGroup',
   mixins: [BasicsUtils],
+
   propTypes: {
     bgClasses: PropTypes.object.isRequired,
     bgUnits: PropTypes.string.isRequired,

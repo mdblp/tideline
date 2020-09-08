@@ -23,13 +23,14 @@ var constants = require('../../logic/constants');
 var Change = require('../sitechange/Change');
 var NoChange = require('../sitechange/NoChange');
 
-var SiteChange = React.createClass({
-  propTypes: {
+class SiteChange extends React.Component {
+  static propTypes = {
     data: PropTypes.object.isRequired,
     date: PropTypes.string.isRequired,
     subtotalType: PropTypes.string,
-  },
-  render: function() {
+  };
+
+  render() {
     var type = this.props.subtotalType || constants.SITE_CHANGE_RESERVOIR;
     var value = this.getValue();
     value.count = value.count || 1; //default value
@@ -42,10 +43,11 @@ var SiteChange = React.createClass({
         {siteChangeComponent}
       </div>
     );
-  },
-  getValue: function() {
-    return this.props.data.infusionSiteHistory[this.props.date];
   }
-});
+
+  getValue = () => {
+    return this.props.data.infusionSiteHistory[this.props.date];
+  };
+}
 
 module.exports = SiteChange;

@@ -23,8 +23,8 @@ var tideline = {
   log: bows('Header')
 };
 
-var TidelineHeader = React.createClass({
-  propTypes: {
+class TidelineHeader extends React.Component {
+  static propTypes = {
     chartType: PropTypes.string.isRequired,
     inTransition: PropTypes.bool,
     atMostRecent: PropTypes.bool,
@@ -36,8 +36,9 @@ var TidelineHeader = React.createClass({
     onClickOneDay: PropTypes.func.isRequired,
     onClickTwoWeeks: PropTypes.func.isRequired,
     onClickSettings: PropTypes.func.isRequired
-  },
-  render: function() {
+  };
+
+  render() {
     var next = this.props.next;
     var back = this.props.back;
     var mostRecent = this.props.mostRecent;
@@ -104,6 +105,6 @@ var TidelineHeader = React.createClass({
       );
     /* jshint ignore:end */
   }
-});
+}
 
 module.exports = TidelineHeader;

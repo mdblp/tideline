@@ -21,8 +21,8 @@ var cx = require('classnames');
 var PropTypes = require('prop-types');
 var React = require('react');
 
-var BasicContainer = React.createClass({
-  propTypes: {
+class BasicContainer extends React.Component {
+  static propTypes = {
     bgClasses: PropTypes.object.isRequired,
     bgUnits: PropTypes.string.isRequired,
     chart: PropTypes.func.isRequired,
@@ -31,8 +31,9 @@ var BasicContainer = React.createClass({
     title: PropTypes.oneOfType([
         PropTypes.string,
         PropTypes.func ]).isRequired
-  },
-  render: function() {
+  };
+
+  render() {
     return (
       <div className='BasicContainer'>
         {this.props.chart({
@@ -44,6 +45,6 @@ var BasicContainer = React.createClass({
       </div>
     );
   }
-});
+}
 
 module.exports = BasicContainer;

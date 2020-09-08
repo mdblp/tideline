@@ -28,8 +28,8 @@ var NoDataContainer = require('./NoDataContainer');
 
 var togglableState = require('../TogglableState');
 
-var DashboardSection = React.createClass({
-  propTypes: {
+class DashboardSection extends React.Component {
+  static propTypes = {
     bgClasses: PropTypes.object.isRequired,
     bgUnits: PropTypes.string.isRequired,
     chartWidth: PropTypes.number.isRequired,
@@ -48,8 +48,9 @@ var DashboardSection = React.createClass({
         PropTypes.string,
         PropTypes.func ]).isRequired,
     trackMetric: PropTypes.func.isRequired,
-  },
-  render: function() {
+  };
+
+  render() {
     var dataDisplay;
     var section = this.props.section;
     if (section.column === 'right') {
@@ -143,21 +144,23 @@ var DashboardSection = React.createClass({
         </div>
       </div>
     );
-  },
-  handleToggleSection: function(e) {
+  }
+
+  handleToggleSection = (e) => {
     if (e) {
       e.preventDefault();
     }
     if (this.props.togglable !== togglableState.off) {
       basicsActions.toggleSection(this.props.name, this.props.trackMetric);
     }
-  },
-  handleToggleSettings: function(e) {
+  };
+
+  handleToggleSettings = (e) => {
     if (e) {
       e.preventDefault();
     }
     basicsActions.toggleSectionSettings(this.props.name, this.props.trackMetric);
-  },
-});
+  };
+}
 
 module.exports = DashboardSection;
