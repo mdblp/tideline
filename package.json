@@ -21,7 +21,7 @@
     "test-watch": "TZ=UTC NODE_ENV=test karma start --no-single-run --reporters=mocha",
     "start": "NODE_ENV=development webpack-dev-server -d --cache --colors --progress --content-base example --port 8081",
     "security-checks": "npm audit --production --audit-level=high --registry=https://registry.npmjs.org/",
-    "lint": "eslint js plugins example test"
+    "lint": "eslint js plugins test --quiet"
   },
   "dependencies": {
     "bows": "1.7.2",
