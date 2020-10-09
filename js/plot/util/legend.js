@@ -15,29 +15,33 @@
  * == BSD2 LICENSE ==
  */
 
-var i18next = require('i18next');
-var _ = require('lodash');
-var t = i18next.t.bind(i18next);
+const i18next = require('i18next');
+const _ = require('lodash');
 
-var legend = {
+const t = i18next.t.bind(i18next);
+
+const radius = 7;
+
+const legend = {
   SHAPE_MARGIN: 3,
   SHAPE_WIDTH: 15.5,
   basal: [
     {
       create: function(opts) {
-        const radius = 7;
-        opts.widths.push(2*radius + legend.SHAPE_MARGIN);
+        opts.widths.push(4*radius + legend.SHAPE_MARGIN);
         const g = opts.selection.append('g').attr({ class: 'd3-basal d3-basal-loop-mode' });
-        g.append('circle').attr({
-          class: 'd3-basal-circle',
-          cx: -radius,
-          cy: -5,
-          r: radius,
+        g.append('rect').attr({
+          class: 'd3-basal-background',
+          x: -radius * 4,
+          y: -radius,
+          width: radius * 4,
+          height: radius * 2,
+          rx: radius,
         });
         g.append('text').attr({
           class: 'd3-basal-label',
-          transform: `translate(${-radius}, -5)`
-        }).text(t('A_Label').charAt(0));
+          transform: `translate(${-radius * 2}, 0)`
+        }).text(t('A_Label'));
         return g;
       },
       type: 'group'
@@ -58,19 +62,20 @@ var legend = {
     },
     {
       create: function(opts) {
-        const radius = 7;
-        opts.widths.push(2*radius);
+        opts.widths.push(4 * radius);
         const g = opts.selection.append('g').attr({ class: 'd3-basal d3-basal-loop-mode-off' });
-        g.append('circle').attr({
-          class: 'd3-basal-circle',
-          cx: -radius,
-          cy: -5,
-          r: radius,
+        g.append('rect').attr({
+          class: 'd3-basal-background',
+          x: -radius * 4,
+          y: -radius,
+          width: radius * 4,
+          height: radius * 2,
+          rx: radius,
         });
         g.append('text').attr({
           class: 'd3-basal-label',
-          transform: `translate(${-radius}, -5)`
-        }).text(t('M_Label').charAt(0));
+          transform: `translate(${-radius * 2}, 0)`
+        }).text(t('M_Label'));
         return g;
       },
       type: 'group'
@@ -282,7 +287,7 @@ var legend = {
       SHAPE_WIDTH: this.SHAPE_WIDTH
     };
     var typeFns = this[type];
-    _.each(typeFns, _.bind(function(fn, i) {
+    _.forEach(typeFns, _.bind(function(fn, i) {
       var created = fn.create(opts), w;
       if (fn.type === 'text' || fn.type === 'group') {
         if (opts.widths[i - 1]) {

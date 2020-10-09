@@ -429,26 +429,20 @@ svg {
 
   // only in legends
   &.d3-basal-loop-mode {
-    .d3-basal-circle {
+    .d3-basal-background {
       fill: @basal-automated;
-    }
-    .d3-basal-label {
-      fill: #4e4e4f;
     }
   }
   &.d3-basal-loop-mode-off {
-    .d3-basal-circle {
+    .d3-basal-background {
       fill: @basal;
-    }
-    .d3-basal-label {
-      fill: #ffffff;
     }
   }
   .d3-basal-label {
     stroke-width: 0;
     font-size: 10px;
     text-anchor: middle;
-    dominant-baseline: central;
+    fill: rgba(0, 0, 0, 0.8);
   }
 }
 

@@ -77,7 +77,7 @@ module.exports = function(pool, opts) {
 
     selection.each(function(currentData) {
 
-      basal.addAnnotations(_.filter(currentData, function(d) { return d.annotations; }));
+      basal.addAnnotations(_.filter(currentData, 'annotations'));
 
       var basalSegments = d3.select(this)
         .selectAll('.d3-basal-group')
@@ -117,12 +117,12 @@ module.exports = function(pool, opts) {
         .append('g')
         .attr('class', 'd3-basal-path-group');
 
-      _.each(basalPathGroups, (data, index) => {
-        var id = data[0].id;
-        var pathType = basalUtil.getBasalPathGroupType(data[0]);
-        var isAutomated = pathType === 'automated';
+      _.forEach(basalPathGroups, (data, index) => {
+        const id = data[0].id;
+        const pathType = basalUtil.getBasalPathGroupType(data[0]);
+        const isAutomated = pathType === 'automated';
 
-        var paths = basalPathsGroup
+        const paths = basalPathsGroup
           .selectAll(`.d3-basal.d3-path-basal.d3-path-basal-${pathType}-${id}`)
           .data([`d3-basal d3-path-basal d3-path-basal-${pathType}-${id}`]);
 
@@ -165,12 +165,14 @@ module.exports = function(pool, opts) {
             });
 
           markersGroups
-            .append('circle')
+            .append('rect')
             .attr({
-              'class': 'd3-basal-group-circle',
-              cx: xPosition,
-              cy: yPosition,
-              r: radius,
+              'class': 'd3-basal-group-background',
+              x: xPosition - radius * 2,
+              y: yPosition - radius,
+              width: radius * 4,
+              height: radius * 2,
+              rx: radius,
             });
 
           markersGroups
@@ -180,8 +182,8 @@ module.exports = function(pool, opts) {
               y: yPosition,
               'class': 'd3-basal-group-label',
             })
-            .text(function(d) {
-              return isAutomated ? t('A_Label').charAt(0) : t('M_Label').charAt(0);
+            .text((/* d */) => {
+              return isAutomated ? t('A_Label') : t('M_Label');
             });
 
           markers.exit().remove();
@@ -357,7 +359,7 @@ module.exports = function(pool, opts) {
         group.append('p')
           .append('span')
           .attr('class', 'secondary')
-          .html(basal.rateString(getDeliverySuppressed(datum.suppressed), 'secondary') + ' '+t('scheduled'));
+          .html(basal.rateString(getDeliverySuppressed(datum.suppressed), 'secondary') + ' '+ t('scheduled'));
       }
       break;
     case 'suspend':
@@ -368,7 +370,7 @@ module.exports = function(pool, opts) {
         group.append('p')
           .append('span')
           .attr('class', 'secondary')
-          .html(basal.rateString(getDeliverySuppressed(datum.suppressed), 'secondary') + ' '+t('scheduled'));
+          .html(basal.rateString(getDeliverySuppressed(datum.suppressed), 'secondary') + ' '+ t('scheduled'));
       }
       break;
     case 'automated':
@@ -378,10 +380,12 @@ module.exports = function(pool, opts) {
           basal.rateString(datum, 'plain'));
       break;
     default:
-      const label = showSheduledLabel ? '<span class="plain muted">' + _.get(SCHEDULED_BASAL_LABELS, source, SCHEDULED_BASAL_LABELS.default) + ':</span> ' : '';
-      group.append('p')
-        .append('span')
-        .html(label + basal.rateString(datum, 'plain'));
+      {
+        const label = showSheduledLabel ? '<span class="plain muted">' + _.get(SCHEDULED_BASAL_LABELS, source, SCHEDULED_BASAL_LABELS.default) + ':</span> ' : '';
+        group.append('p')
+          .append('span')
+          .html(label + basal.rateString(datum, 'plain'));
+      }
     }
 
     let begin = '';
