@@ -65,7 +65,7 @@ svg {
     fill: @text;
     &.d3-day-label {
       dominant-baseline: hanging;
-      fill: @text-light;
+      fill: var(--stat--default, @text-light);
     }
 
     @media (max-width: @screen-sm-max) {
@@ -131,7 +131,7 @@ svg {
 .d3-pool-legend {
   font-size: @font-size-axes;
   text-anchor: end;
-  fill: @text-light;
+  fill: var(--stat--default, @text-light);
 
   @media (max-width: @screen-sm-max) {
     font-size: 10px;
@@ -448,7 +448,8 @@ svg {
     stroke-width: 0;
     font-size: 10px;
     text-anchor: middle;
-    font-weight: bold;
+    font-weight: normal;
+    dominant-baseline: middle;
   }
 }
 
